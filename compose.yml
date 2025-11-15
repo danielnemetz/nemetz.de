@@ -1,0 +1,26 @@
+services:
+  web:
+    image: nginx:alpine
+    container_name: nemetz-de-web
+    restart: unless-stopped
+    volumes:
+      - ./html:/usr/share/nginx/html:ro
+    networks:
+      - traefik-network
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.nemetz-de.rule=Host(`nemetz.de`)'
+      - 'traefik.http.routers.nemetz-de.entrypoints=websecure'
+      - 'traefik.http.routers.nemetz-de.tls.certresolver=cloudflare'
+      - 'traefik.http.routers.nemetz-de.middlewares=headers-nemetz-de'
+      - 'traefik.http.middlewares.headers-nemetz-de.headers.customrequestheaders.X-Forwarded-Proto=https'
+      - 'traefik.http.middlewares.headers-nemetz-de.headers.customrequestheaders.X-Forwarded-Ssl=on'
+      - 'traefik.http.routers.nemetz-de-web.rule=Host(`nemetz.de`)'
+      - 'traefik.http.routers.nemetz-de-web.entrypoints=web'
+      - 'traefik.http.routers.nemetz-de-web.service=nemetz-de'
+      - 'traefik.http.services.nemetz-de.loadbalancer.server.port=80'
+
+networks:
+  traefik-network:
+    external: true
+
