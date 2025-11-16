@@ -22,6 +22,22 @@
     src: url('/fonts/roboto-condensed-700.ttf') format('truetype');
 }
 
+@font-face {
+    font-family: 'Noto Serif Local';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('/fonts/noto-serif-regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Noto Serif Local';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('/fonts/noto-serif-bold.ttf') format('truetype');
+}
+
 :root {
     --color-primary: #d62222;
     --color-text: white;
@@ -50,6 +66,9 @@
     --font-weight-normal: 300;
     --font-size-heading: 2.0em;
     --font-size-base: 1em;
+    --font-family-prose: 'Noto Serif Local', serif;
+    --font-size-prose: 1.1em;
+    --line-height-prose: 1.6;
 
     --size-me: 100px;
     --size-icon: 28px;
@@ -95,6 +114,12 @@
     --bg-position-center: center center;
 }
 
+/* Prefer dynamic viewport height on modern browsers */
+@supports (height: 1dvh) {
+    :root {
+        --dialog-max-height: 80dvh;
+    }
+}
 * {
     margin: 0;
     padding: 0;
@@ -304,10 +329,11 @@ dialog {
     max-width: var(--dialog-max-width);
     width: calc(100% - 2 * var(--dialog-padding));
     max-height: var(--dialog-max-height);
-    overflow: auto;
+    overflow: hidden;
     animation: dialog-scale-in var(--dialog-anim-duration) ease-out;
     transform-origin: center;
     will-change: transform, opacity;
+    color-scheme: dark;
 }
 
 dialog::backdrop {
@@ -320,12 +346,64 @@ dialog::backdrop {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-md);
+    max-height: var(--dialog-max-height);
 }
 
 .dialog-content h2 {
     font-size: 1.25rem;
 }
 
+/* Scrollable body inside dialog; header and actions remain fixed */
+.dialog-body {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    min-height: 0;
+    /* Scrollbar styling */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.45) transparent;
+}
+.dialog-body::-webkit-scrollbar {
+    width: 10px;
+}
+.dialog-body::-webkit-scrollbar-track {
+    background: transparent;
+}
+.dialog-body::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.45);
+    border-radius: 8px;
+    border: 2px solid transparent;
+}
+
+/* ==========================================================================
+   Typography
+   - Scoped vertical rhythm and element defaults
+   - Apply via a wrapper: class="typography"
+   ========================================================================== */
+.typography {
+    font-family: var(--font-family-prose);
+    font-size: var(--font-size-prose);
+    line-height: var(--line-height-prose);
+}
+.typography p + p,
+.typography * + ul,
+.typography * + ol {
+    margin-top: var(--spacing-md);
+}
+.typography ul,
+.typography ol {
+    padding-left: 1.25rem;
+    margin-top: var(--spacing-sm);
+}
+.typography h1,
+.typography h2,
+.typography h3,
+.typography h4,
+.typography h5,
+.typography h6 {
+    line-height: 1.25;
+    margin-top: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
+}
 @keyframes dialog-scale-in {
     from { transform: translate(-50%, -50%) scale(0.98); opacity: 0; }
     to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
