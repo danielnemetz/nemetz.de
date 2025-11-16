@@ -109,9 +109,18 @@
     --blur-backdrop: 3px;
 
     --bg-image-back: url('/images/back.jpg');
-    --bg-image-me: url('/images/me.emoji.jpg');
+    --bg-image-me: url('/images/me.emoji.transparent.png');
     --bg-position-center-top: center top;
     --bg-position-center: center center;
+
+    /* Tooltip design tokens */
+    --tooltip-bg: rgba(0, 0, 0, 0.85);
+    --tooltip-text: #fff;
+    --tooltip-radius: 6px;
+    --tooltip-padding: 6px 10px;
+    --tooltip-offset: 8px;
+    --tooltip-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    --tooltip-font-size: 14px;
 }
 
 /* Prefer dynamic viewport height on modern browsers */
@@ -194,6 +203,58 @@ main .me:hover {
     transition: var(--transition-duration);
     box-shadow: var(--shadow-box-hover);
     transform: scale(1.05);
+}
+
+/* ==========================================================================
+   Tooltip (CSS-only)
+   - Triggered by adding data-tooltip="..." on the anchor wrapping .me
+   - Appears above and centered relative to the anchor
+   ========================================================================== */
+[data-tooltip] {
+    position: relative;
+}
+[data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + var(--tooltip-offset));
+    transform: translateX(-50%) translateY(4px);
+    background: var(--tooltip-bg);
+    color: var(--tooltip-text);
+    font-size: var(--tooltip-font-size);
+    padding: var(--tooltip-padding);
+    border-radius: var(--tooltip-radius);
+    box-shadow: var(--tooltip-shadow);
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition-duration), transform var(--transition-duration);
+    z-index: 10;
+}
+[data-tooltip]::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + var(--tooltip-offset) - 4px);
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: var(--tooltip-bg);
+    opacity: 0;
+    transition: opacity var(--transition-duration);
+    z-index: 10;
+}
+[data-tooltip]:hover::after,
+[data-tooltip]:focus::after,
+[data-tooltip]:focus-visible::after,
+[data-tooltip]:hover::before,
+[data-tooltip]:focus::before,
+[data-tooltip]:focus-visible::before {
+    opacity: 1;
+}
+[data-tooltip]:hover::after,
+[data-tooltip]:focus::after,
+[data-tooltip]:focus-visible::after {
+    transform: translateX(-50%) translateY(0);
 }
 
 main > h1 {
