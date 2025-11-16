@@ -1,0 +1,22 @@
+{
+  "common": {
+    "close": "Schließen"
+  },
+  "about": {
+    "title": "Das bin ich.",
+    "intro": "Moin! Ich bin Senior Software Engineer mit über einem Jahrzehnt Branchenerfahrung. Ich bin spezialisiert auf den Aufbau skalierbarer und nachhaltiger Softwarearchitekturen und die Restrukturierung komplexer Systeme zur Verbesserung von Performance und Wartbarkeit.",
+    "expertise": "Meine Kernkompetenz liegt in Angular, TypeScript und NodeJS, außerdem beherrsche ich moderne DevOps‑Prinzipien. Ich habe praktische Erfahrung in der Migration von Infrastrukturen mit IaC‑Tools wie Terraform und Ansible, dem Aufbau von CI/CD‑Pipelines und der Arbeit mit Containerisierung (Docker).",
+    "mentoring_accessibility": "Abseits des Codes fördere ich technische Exzellenz in Teams. Ich coache Entwickler:innen und fungiere als kommunikative Brücke zwischen Engineering, UI/UX‑Design und Product. Zudem setze ich mich für digitale Barrierefreiheit ein und habe Erfahrung in der Umsetzung von Anwendungen nach WCAG‑Standards.",
+    "outro": "Ich bin offen für neue Herausforderungen und gemeinsame Projekte. Kontaktieren Sie mich gerne – oder vernetzen Sie sich auf LinkedIn.",
+    "cta": "Kontakt aufnehmen"
+  },
+  "imprint": {
+    "title": "Impressum",
+    "legalIntro": "Angaben gemäß § 5 DDG",
+    "name": "Daniel Nemetz",
+    "addressHtml": "August-Bebel-Straße 189<br>21465 Wentorf",
+    "contactHtml": "<strong>Kontakt:</strong><br>Telefon: <a href=\\\"tel:+494041366419\\\">+49 40 413 66 419</a><br>E‑Mail: <a href=\\\"mailto:daniel@nemetz.de\\\">daniel@nemetz.de</a>",
+    "consumerNoticeHtml": "<strong>Verbraucher­streit­beilegung/Universal­schlichtungs­stelle</strong><br>Ich bin nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucher­schlichtungsstelle teilzunehmen."
+  }
+}
+

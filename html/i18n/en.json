@@ -1,0 +1,22 @@
+{
+  "common": {
+    "close": "Close"
+  },
+  "about": {
+    "title": "This is me.",
+    "intro": "Hello! I'm a Senior Software Engineer with over a decade of experience in the industry. I specialize in building scalable, sustainable software architectures and restructuring complex systems to enhance performance and maintainability.",
+    "expertise": "While my core expertise lies in Angular, TypeScript, and NodeJS, I'm also deeply proficient in modern DevOps principles. I have hands-on experience migrating infrastructure using IaC tools like Terraform and Ansible, setting up CI/CD pipelines, and working extensively with containerization (Docker).",
+    "mentoring_accessibility": "Beyond the code, I am passionate about fostering technical excellence in teams. I enjoy mentoring fellow developers and serving as the communication bridge between engineering, UI/UX designers, and product owners. I am also a dedicated advocate for web accessibility, with deep knowledge of implementing applications that meet stringent WCAG standards.",
+    "outro": "I'm always open to discussing new challenges or collaborating on interesting projects. Feel free to get in touch or connect with me on LinkedIn.",
+    "cta": "Get in touch"
+  },
+  "imprint": {
+    "title": "Imprint",
+    "legalIntro": "Information according to § 5 DDG",
+    "name": "Daniel Nemetz",
+    "addressHtml": "August-Bebel-Straße 189<br>21465 Wentorf",
+    "contactHtml": "<strong>Contact:</strong><br>Phone: <a href=\"tel:+494041366419\">+49 40 413 66 419</a><br>Email: <a href=\"mailto:daniel@nemetz.de\">daniel@nemetz.de</a>",
+    "consumerNoticeHtml": "<strong>Consumer dispute resolution / Universal arbitration body</strong><br>I do not participate in dispute resolution proceedings before a consumer arbitration board and am not obliged to do so."
+  }
+}
+
