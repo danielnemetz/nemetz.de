@@ -383,6 +383,11 @@ dialog::backdrop {
     font-family: var(--font-family-prose);
     font-size: var(--font-size-prose);
     line-height: var(--line-height-prose);
+    font-weight: 400; /* ensure regular weight for better contrast to strong */
+}
+.typography strong,
+.typography b {
+    font-weight: 900;
 }
 .typography p + p,
 .typography * + ul,
@@ -403,6 +408,8 @@ dialog::backdrop {
     line-height: 1.25;
     margin-top: var(--spacing-md);
     margin-bottom: var(--spacing-sm);
+    font-family: var(--font-family); /* use Roboto Condensed for headings */
+    font-weight: 700;
 }
 @keyframes dialog-scale-in {
     from { transform: translate(-50%, -50%) scale(0.98); opacity: 0; }

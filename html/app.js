@@ -1,61 +1,75 @@
 (() => {
-    const ABOUT_PATH = '/about';
     const OPEN_ATTR = 'data-open-dialog';
-    const DIALOG_ID = 'about-dialog';
-
-    let dialog = null;
+    const MODALS = {
+        about:   { id: 'about-dialog',   path: '/about'   },
+        imprint: { id: 'imprint-dialog', path: '/imprint' },
+    };
+    let currentKey = null;
     let lastFocused = null;
 
-    function getDialog() {
-        if ((dialog === null)) {
-            dialog = document.getElementById(DIALOG_ID);
+    function getDialog(key) {
+        const def = MODALS[key];
+        if (!def) { return null; }
+        return document.getElementById(def.id);
+    }
+
+    function getKeyByPath(pathname) {
+        for (const [key, def] of Object.entries(MODALS)) {
+            if (pathname === def.path) { return key; }
         }
-        return dialog;
+        return null;
     }
 
-    function isAboutPath() {
-        return (location.pathname === ABOUT_PATH);
+    function pushPathFor(key) {
+        const def = MODALS[key];
+        if (!def) { return; }
+        if (location.pathname !== def.path) {
+            history.pushState({ modal: key }, '', def.path);
+        }
     }
 
-    function pushAboutUrl() {
-        if (isAboutPath()) { return; }
-        history.pushState({ modal: 'about' }, '', ABOUT_PATH);
+    function replaceToRootIfPathMatches(key) {
+        const def = MODALS[key];
+        if (!def) { return; }
+        if (location.pathname === def.path) {
+            history.replaceState({}, '', '/');
+        }
     }
 
-    function replaceToRoot() {
-        if (!isAboutPath()) { return; }
-        history.replaceState({}, '', '/');
+    function showDialog(key) {
+        const dlg = getDialog(key);
+        if (dlg && !dlg.open) { dlg.showModal(); }
     }
 
-    function showDialog() {
-        const dlg = getDialog();
-        if (!dlg) { return; }
-        if (!dlg.open) { dlg.showModal(); }
+    function hideDialog(key) {
+        const dlg = getDialog(key);
+        if (dlg && dlg.open) { dlg.close(); }
     }
 
-    function hideDialog() {
-        const dlg = getDialog();
-        if (!dlg) { return; }
-        if (dlg.open) { dlg.close(); }
-    }
-
-    function openDialog(event, { updateUrl = true } = {}) {
+    function openDialog(event, { updateUrl = true, key } = {}) {
         if (event && event.preventDefault) { event.preventDefault(); }
+        if (!key && event && event.currentTarget) {
+            key = event.currentTarget.getAttribute(OPEN_ATTR);
+        }
+        if (!key || !MODALS[key]) { return; }
         lastFocused = document.activeElement;
-        showDialog();
-        if ((updateUrl === true)) { pushAboutUrl(); }
+        currentKey = key;
+        showDialog(key);
+        if (updateUrl === true) { pushPathFor(key); }
     }
 
     function closeDialog({ updateUrl = true } = {}) {
-        hideDialog();
+        if (!currentKey) { return; }
+        hideDialog(currentKey);
         if (lastFocused && (typeof lastFocused.focus === 'function')) {
             lastFocused.focus();
         }
-        if ((updateUrl === true)) { replaceToRoot(); }
+        if (updateUrl === true) { replaceToRootIfPathMatches(currentKey); }
+        currentKey = null;
     }
 
-    function handleBackdropClick(e) {
-        const dlg = getDialog();
+    function handleBackdropClick(key, e) {
+        const dlg = getDialog(key);
         if (!dlg) { return; }
         const rect = dlg.getBoundingClientRect();
         const inside = (
@@ -68,24 +82,21 @@
     }
 
     function initOpeners() {
-        document.querySelectorAll(`[${OPEN_ATTR}="about"]`).forEach((el) => {
+        document.querySelectorAll(`[${OPEN_ATTR}]`).forEach((el) => {
             el.addEventListener('click', (e) => openDialog(e));
         });
     }
 
-    function initDialogEvents() {
-        const dlg = getDialog();
+    function initDialogEventsFor(key) {
+        const dlg = getDialog(key);
         if (!dlg) { return; }
         dlg.addEventListener('cancel', (e) => { e.preventDefault(); closeDialog({ updateUrl: true }); });
-        dlg.addEventListener('click', handleBackdropClick);
+        dlg.addEventListener('click', (e) => handleBackdropClick(key, e));
         dlg.querySelectorAll('button[value="close"]').forEach((btn) => {
             btn.addEventListener('click', () => closeDialog({ updateUrl: true }));
         });
-        // Arrow navigation in actions toolbar
         const toolbar = dlg.querySelector('.dialog-actions');
-        if (toolbar) {
-            initToolbarArrowNav(toolbar);
-        }
+        if (toolbar) { initToolbarArrowNav(toolbar); }
     }
 
     function initToolbarArrowNav(toolbarEl) {
@@ -119,24 +130,26 @@
 
     function initPopstateSync() {
         window.addEventListener('popstate', () => {
-            if (isAboutPath()) {
-                showDialog();
-            } else {
-                hideDialog();
+            const key = getKeyByPath(location.pathname);
+            if (key) {
+                currentKey = key;
+                showDialog(key);
+            } else if (currentKey) {
+                hideDialog(currentKey);
+                currentKey = null;
             }
         });
     }
 
     function initDeepLink() {
-        if (isAboutPath()) {
-            showDialog();
-        }
+        const key = getKeyByPath(location.pathname);
+        if (key) { currentKey = key; showDialog(key); }
     }
 
     function init() {
-        if (!getDialog()) { return; }
+        // Initialize known dialogs
+        Object.keys(MODALS).forEach(initDialogEventsFor);
         initOpeners();
-        initDialogEvents();
         initPopstateSync();
         initDeepLink();
         // Footer toolbar arrow navigation (contact links)
