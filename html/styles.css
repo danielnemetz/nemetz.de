@@ -241,14 +241,9 @@ footer .icon img {
         text-align: center;
     }
 
-    footer > .empty {
-        display: none;
-    }
-
     footer .contact {
         display: flex;
         flex-direction: column;
-        align-items: flex-start;
         gap: var(--spacing-sm);
     }
 
