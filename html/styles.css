@@ -39,6 +39,7 @@
     --shadow-box-hover: 0 1px 8px rgba(255, 255, 255, 0.5);
     --shadow-icon: 0 1px 8px rgba(255, 255, 255, 0.3);
     --shadow-icon-hover: 0 1px 12px rgba(255, 255, 255, 0.6), 0 0 16px rgba(255, 255, 255, 0.3);
+    --shadow-primary-soft: 0 0 8px rgba(214, 34, 34, 0.35);
 
     --spacing-xs: 2px;
     --spacing-sm: 10px;
@@ -60,10 +61,36 @@
 
     --transition-duration: 0.3s;
 
+    /* Button design tokens */
+    --btn-padding-y: 8px;
+    --btn-padding-x: 14px;
+    --btn-radius: 8px;
+    --btn-scale-hover: 1.02;
+    --btn-scale-active: 0.98;
+    --btn-border-width: var(--size-border);
+    --btn-border-color: var(--color-border);
+    --btn-text-color: var(--color-text);
+    --btn-bg: transparent;
+    --btn-shadow: var(--shadow-box);
+    --btn-primary-bg: var(--color-primary);
+    --btn-primary-text: #fff;
+
+    /* Dialog (modal) design tokens */
+    --dialog-radius: 12px;
+    --dialog-padding: var(--spacing-lg);
+    --dialog-text: var(--color-text);
+    --dialog-bg: rgba(0, 0, 0, 0.7);
+    --dialog-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    --dialog-max-width: 520px;
+    --dialog-max-height: 80vh;
+    --dialog-backdrop-bg: rgba(0, 0, 0, 0.5);
+    --dialog-backdrop-blur: 2px;
+    --dialog-anim-duration: 200ms;
+
     --blur-backdrop: 3px;
 
     --bg-image-back: url('/images/back.jpg');
-    --bg-image-me: url('/images/me.jpg');
+    --bg-image-me: url('/images/me.emoji.jpg');
     --bg-position-center-top: center top;
     --bg-position-center: center center;
 }
@@ -254,4 +281,130 @@ footer .icon img {
     footer .icons {
         align-self: flex-end;
     }
+}
+
+/* ==========================================================================
+   Modal Dialog
+   - Uses native <dialog> element
+   - Centered with fixed positioning
+   - Backdrop blur and subtle scale-in animation
+   ========================================================================== */
+dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: none;
+    border-radius: var(--dialog-radius);
+    padding: var(--dialog-padding);
+    color: var(--dialog-text);
+    background: var(--dialog-bg);
+    backdrop-filter: blur(var(--blur-backdrop));
+    box-shadow: var(--dialog-shadow);
+    max-width: var(--dialog-max-width);
+    width: calc(100% - 2 * var(--dialog-padding));
+    max-height: var(--dialog-max-height);
+    overflow: auto;
+    animation: dialog-scale-in var(--dialog-anim-duration) ease-out;
+    transform-origin: center;
+    will-change: transform, opacity;
+}
+
+dialog::backdrop {
+    background: var(--dialog-backdrop-bg);
+    backdrop-filter: blur(var(--dialog-backdrop-blur));
+    animation: backdrop-fade-in var(--dialog-anim-duration) ease-out;
+}
+
+.dialog-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.dialog-content h2 {
+    font-size: 1.25rem;
+}
+
+@keyframes dialog-scale-in {
+    from { transform: translate(-50%, -50%) scale(0.98); opacity: 0; }
+    to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+
+@keyframes backdrop-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* ==========================================================================
+   Buttons (global)
+   - Usage:
+     - <button class="btn">Close</button>
+     - <button class="btn primary">Primary</button>
+     - <a class="btn-link" href="#">Link</a>
+     - <a class="btn-link primary" href="#">Primary Link</a>
+   ========================================================================== */
+.btn,
+.btn-link {
+    display: inline-block;
+    text-decoration: none;
+    padding: var(--btn-padding-y) var(--btn-padding-x);
+    border-radius: var(--btn-radius);
+    transition: var(--transition-duration);
+    cursor: pointer;
+}
+
+.btn {
+    appearance: none;
+    border: var(--btn-border-width) solid var(--btn-border-color);
+    color: var(--btn-text-color);
+    background: var(--btn-bg);
+    box-shadow: var(--btn-shadow);
+}
+
+.btn.primary,
+.btn-link.primary {
+    background: var(--btn-primary-bg);
+    border: none;
+    color: var(--btn-primary-text);
+    box-shadow: var(--btn-shadow);
+}
+
+.btn-link {
+    border: var(--btn-border-width) solid transparent;
+    color: var(--btn-text-color);
+    background: var(--btn-bg);
+    box-shadow: var(--btn-shadow);
+}
+
+.btn:hover,
+.btn:focus,
+.btn:focus-visible,
+.btn-link:hover,
+.btn-link:focus,
+.btn-link:focus-visible {
+    outline: none;
+    transform: scale(var(--btn-scale-hover));
+    box-shadow: var(--shadow-icon-hover);
+}
+
+.btn:active,
+.btn-link:active {
+    transform: scale(var(--btn-scale-active));
+}
+
+.dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--spacing-sm);
+}
+
+/* Primary button glow overrides */
+.btn.primary:hover,
+.btn.primary:focus,
+.btn.primary:focus-visible,
+.btn-link.primary:hover,
+.btn-link.primary:focus,
+.btn-link.primary:focus-visible {
+    box-shadow: var(--shadow-icon-hover);
 }
