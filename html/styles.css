@@ -129,7 +129,9 @@
         --dialog-max-height: 80dvh;
     }
 }
-* {
+*,
+*::before,
+*::after {
     margin: 0;
     padding: 0;
 }
@@ -154,10 +156,6 @@ a {
 }
 
 a:hover {
-    -webkit-transition: var(--transition-duration);
-    -moz-transition: var(--transition-duration);
-    -o-transition: var(--transition-duration);
-    transition: var(--transition-duration);
     color: var(--color-text-link-hover);
     text-shadow: var(--shadow-text-hover);
 }
@@ -197,10 +195,6 @@ main .me {
 }
 
 main .me:hover {
-    -webkit-transition: var(--transition-duration);
-    -moz-transition: var(--transition-duration);
-    -o-transition: var(--transition-duration);
-    transition: var(--transition-duration);
     box-shadow: var(--shadow-box-hover);
     transform: scale(1.05);
 }
@@ -321,10 +315,6 @@ footer .icon {
 }
 
 footer .icon:hover {
-    -webkit-transition: var(--transition-duration);
-    -moz-transition: var(--transition-duration);
-    -o-transition: var(--transition-duration);
-    transition: var(--transition-duration);
     box-shadow: var(--shadow-icon-hover);
 }
 

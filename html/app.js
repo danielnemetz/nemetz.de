@@ -32,10 +32,8 @@
     }
 
     function getKeyByPath(pathname) {
-        for (const [key, def] of Object.entries(MODALS)) {
-            if (pathname === def.path) { return key; }
-        }
-        return null;
+        const entry = Object.entries(MODALS).find(([, def]) => pathname === def.path);
+        return entry ? entry[0] : null;
     }
 
     function pushPathFor(key) {
@@ -89,20 +87,20 @@
 
     function handleBackdropClick(key, e) {
         const dlg = getDialog(key);
-        if (!dlg) { return; }
-        const rect = dlg.getBoundingClientRect();
-        const inside = (
-            (e.clientX >= rect.left) &&
-            (e.clientX <= rect.right) &&
-            (e.clientY >= rect.top) &&
-            (e.clientY <= rect.bottom)
-        );
-        if (!inside) { closeDialog({ updateUrl: true }); }
+        if (!dlg || e.target === dlg) {
+            closeDialog({ updateUrl: true });
+        }
     }
 
     function initOpeners() {
         document.querySelectorAll(`[${OPEN_ATTR}]`).forEach((el) => {
             el.addEventListener('click', (e) => openDialog(e));
+        });
+    }
+
+    function updateLangToggles(dlg) {
+        dlg.querySelectorAll('.lang-toggle').forEach((b) => {
+            b.setAttribute('aria-pressed', String(b.getAttribute('data-lang') === currentLang));
         });
     }
 
@@ -116,14 +114,11 @@
         });
         const toolbar = dlg.querySelector('.dialog-actions');
         if (toolbar) { initToolbarArrowNav(toolbar); }
-        // language controls in header
-        const toggles = dlg.querySelectorAll('.lang-toggle');
-        toggles.forEach((btn) => {
+        dlg.querySelectorAll('.lang-toggle').forEach((btn) => {
             btn.addEventListener('click', () => {
                 const lang = btn.getAttribute('data-lang');
                 setLanguage(lang, { syncUrl: true });
                 renderModal(key);
-                toggles.forEach(b => b.setAttribute('aria-pressed', String(b.getAttribute('data-lang') === currentLang)));
             });
         });
     }
@@ -133,11 +128,11 @@
             return Array.from(toolbarEl.querySelectorAll('button:not([disabled]), a[href]'))
                 .filter((el) => {
                     const style = getComputedStyle(el);
-                    return (style.display !== 'none') && (style.visibility !== 'hidden') && (el.tabIndex !== -1);
+                    return style.display !== 'none' && style.visibility !== 'hidden' && el.tabIndex !== -1;
                 });
         }
         toolbarEl.addEventListener('keydown', (e) => {
-            const isLTR = (getComputedStyle(document.documentElement).direction !== 'rtl');
+            const isLTR = getComputedStyle(document.documentElement).direction !== 'rtl';
             const prevKey = isLTR ? 'ArrowLeft' : 'ArrowRight';
             const nextKey = isLTR ? 'ArrowRight' : 'ArrowLeft';
             const keys = [prevKey, nextKey, 'Home', 'End'];
@@ -147,9 +142,9 @@
             const currentIndex = Math.max(0, items.indexOf(document.activeElement));
             let nextIndex = currentIndex;
             if (e.key === nextKey) { nextIndex = (currentIndex + 1) % items.length; }
-            if (e.key === prevKey) { nextIndex = (currentIndex - 1 + items.length) % items.length; }
-            if (e.key === 'Home') { nextIndex = 0; }
-            if (e.key === 'End') { nextIndex = items.length - 1; }
+            else if (e.key === prevKey) { nextIndex = (currentIndex - 1 + items.length) % items.length; }
+            else if (e.key === 'Home') { nextIndex = 0; }
+            else if (e.key === 'End') { nextIndex = items.length - 1; }
             if (nextIndex !== currentIndex) {
                 e.preventDefault();
                 items[nextIndex].focus();
@@ -176,16 +171,21 @@
     function initDeepLink() {
         const key = getKeyByPath(location.pathname);
         const urlLang = getLangFromUrl();
-        if (urlLang) { setLanguage(urlLang, { syncUrl: false }); }
-        else {
+        if (urlLang) {
+            setLanguage(urlLang, { syncUrl: false });
+        } else {
             const stored = localStorage.getItem('lang');
-            if (stored === 'de' || stored === 'en') { currentLang = stored; }
-            else {
-                const browser = getBrowserDefaultLang();
-                setLanguage(browser, { syncUrl: false });
+            if (stored === 'de' || stored === 'en') {
+                currentLang = stored;
+            } else {
+                setLanguage(getBrowserDefaultLang(), { syncUrl: false });
             }
         }
-        if (key) { currentKey = key; showDialog(key); renderModal(key); }
+        if (key) {
+            currentKey = key;
+            showDialog(key);
+            renderModal(key);
+        }
     }
 
     function init() {
@@ -209,14 +209,10 @@
     }
 
     function getBrowserDefaultLang() {
-        const candidates = Array.isArray(navigator.languages) && (navigator.languages.length > 0)
+        const candidates = navigator.languages?.length > 0
             ? navigator.languages
             : [navigator.language, navigator.userLanguage, navigator.browserLanguage].filter(Boolean);
-        for (const cand of candidates) {
-            const lc = String(cand || '').toLowerCase();
-            if (lc.startsWith('de')) { return 'de'; }
-        }
-        return 'en';
+        return candidates.some(lang => String(lang || '').toLowerCase().startsWith('de')) ? 'de' : 'en';
     }
 
     function setLanguage(lang, { syncUrl = false } = {}) {
@@ -245,16 +241,14 @@
                 if (node && typeof node === 'object') { node = node[p]; }
             }
             if (typeof node === 'string') {
-                if (node.includes('<')) { el.innerHTML = node; }
-                else { el.textContent = node; }
+                el[node.includes('<') ? 'innerHTML' : 'textContent'] = node;
             }
         });
-        dlg.querySelectorAll('.lang-toggle').forEach((b) => {
-            b.setAttribute('aria-pressed', String(b.getAttribute('data-lang') === currentLang));
-        });
+        updateLangToggles(dlg);
     }
 
     init();
 })();
+
 
 
