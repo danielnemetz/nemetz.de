@@ -23,19 +23,19 @@
 }
 
 @font-face {
-    font-family: 'Noto Serif Local';
+    font-family: 'Roboto Slab';
     font-style: normal;
     font-weight: 400;
     font-display: swap;
-    src: url('/fonts/noto-serif-regular.ttf') format('truetype');
+    src: url('/fonts/roboto-slab-400.ttf') format('truetype');
 }
 
 @font-face {
-    font-family: 'Noto Serif Local';
+    font-family: 'Roboto Slab';
     font-style: normal;
     font-weight: 700;
     font-display: swap;
-    src: url('/fonts/noto-serif-bold.ttf') format('truetype');
+    src: url('/fonts/roboto-slab-700.ttf') format('truetype');
 }
 
 :root {
@@ -66,7 +66,7 @@
     --font-weight-normal: 300;
     --font-size-heading: 2.0em;
     --font-size-base: 1em;
-    --font-family-prose: 'Noto Serif Local', serif;
+    --font-family-prose: 'Roboto Slab', serif;
     --font-size-prose: 1.1em;
     --line-height-prose: 1.6;
 
