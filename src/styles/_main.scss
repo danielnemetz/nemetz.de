@@ -1,0 +1,57 @@
+// ==========================================================================
+// Main Content
+// ==========================================================================
+@use 'mixins' as *;
+
+main {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: center;
+    align-items: center;
+    gap: var(--spacing-md);
+
+    .me {
+        width: var(--size-me);
+        height: var(--size-me);
+        box-shadow: var(--shadow-box);
+        background-image: var(--bg-image-me);
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: var(--bg-position-center);
+        border-radius: var(--border-radius-circle);
+        border: var(--size-border) solid var(--color-border);
+        @include transition();
+
+        &:hover {
+            box-shadow: var(--shadow-box-hover);
+            transform: scale(1.05);
+        }
+    }
+
+    > h1 {
+        font-size: var(--font-size-heading);
+
+        > a {
+            color: var(--color-text);
+        }
+    }
+
+    p {
+        text-align: center;
+    }
+
+    &.error {
+        background-color: var(--color-bg-error);
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+
+        > * {
+            text-transform: uppercase;
+        }
+    }
+}
+

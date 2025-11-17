@@ -1,0 +1,23 @@
+// ==========================================================================
+// Animations
+// ==========================================================================
+@keyframes dialog-scale-in {
+    from {
+        transform: translate(-50%, -50%) scale(0.98);
+        opacity: 0;
+    }
+    to {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes backdrop-fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+

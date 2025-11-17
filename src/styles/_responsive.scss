@@ -1,0 +1,40 @@
+// ==========================================================================
+// Responsive
+// ==========================================================================
+@media (max-width: 600px) {
+    :root {
+        --font-size-heading: 1.5em;
+        --size-me: 80px;
+        --spacing-md: 15px;
+        --spacing-sm: 8px;
+    }
+
+    main {
+        .text {
+            max-width: 90%;
+            padding: 0 var(--spacing-sm);
+        }
+
+        > h1 {
+            font-size: var(--font-size-heading);
+            text-align: center;
+        }
+    }
+
+    footer {
+        .contact {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+
+            > .separator {
+                display: none;
+            }
+        }
+
+        .icons {
+            align-self: flex-end;
+        }
+    }
+}
+

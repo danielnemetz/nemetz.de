@@ -1,0 +1,35 @@
+// ==========================================================================
+// Base Styles
+// ==========================================================================
+@use 'mixins' as *;
+
+html,
+body {
+    font-family: var(--font-family);
+    font-weight: var(--font-weight-normal);
+    color: var(--color-text);
+    text-shadow: var(--shadow-text);
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    background-image: var(--bg-image-back);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: var(--bg-position-center-top);
+}
+
+a {
+    text-decoration: none;
+    color: var(--color-text-link);
+    @include transition();
+
+    &:hover {
+        color: var(--color-text-link-hover);
+        text-shadow: var(--shadow-text-hover);
+    }
+}
+
