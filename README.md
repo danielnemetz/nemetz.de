@@ -7,6 +7,11 @@ Persönliche Website von Daniel Nemetz - gebaut mit TypeScript, SASS und Vite, d
 ```
 nemetz.de/
 ├── src/                    # Quellcode (TypeScript, SASS, HTML)
+│   ├── lib/                # TypeScript Module (modulare Struktur)
+│   ├── styles/             # SASS Module (modulare Struktur)
+│   ├── app.ts              # Hauptdatei
+│   ├── index.html          # HTML Template
+│   └── styles.scss         # Haupt-Stylesheet (importiert alle Module)
 ├── public/                 # Statische Assets (fonts, images, i18n, favicons)
 ├── nginx/                  # Nginx-Konfiguration
 ├── dist/                   # Build-Output (wird beim Build erstellt)
@@ -200,7 +205,10 @@ Die `compose.yml` konfiguriert:
 
 Die Nginx-Konfiguration (`nginx/default.conf`) bietet:
 - Gzip-Kompression
-- Caching für statische Assets (30 Tage)
+- Optimierte Cache-Strategie:
+  - HTML: `no-cache` (wird immer neu geladen für Cache-Busting)
+  - Gehashte Assets (`/assets/*-[hash].js|css`): 1 Jahr Cache (Hash sorgt für Cache-Busting)
+  - Andere Assets (Bilder, Fonts): 30 Tage Cache
 - SPA-Routing (try_files)
 
 ### Vite
@@ -209,8 +217,8 @@ Die Vite-Konfiguration (`vite.config.ts`):
 - Root: `./src`
 - Public Dir: `../public`
 - Build Output: `../dist`
-- Dateinamen ohne Hash (`app.js`, `styles.css`)
-- HTML wird nach Build angepasst (Plugin)
+- Hash-basierte Dateinamen für Cache-Busting (`assets/index-[hash].js`, `assets/index-[hash].css`)
+- HTML wird nach Build angepasst (Plugin extrahiert gehashte Pfade)
 
 ## Troubleshooting
 
@@ -278,4 +286,6 @@ Die Nginx-Konfiguration verwendet Port 80. Falls dieser belegt ist, kann die `co
 - `node_modules/` wird im Docker-Container installiert
 - Das `traefik-network` muss auf dem Server existieren
 - Bei Änderungen an Dependencies: `pnpm-lock.yaml` mit committen
+- **Cache-Busting**: Hash-basierte Dateinamen sorgen automatisch für Cache-Invalidierung bei Code-Änderungen
+- **Modulare Struktur**: TypeScript-Module in `src/lib/`, SASS-Module in `src/styles/`
 
