@@ -15,7 +15,7 @@
       padding: 0 var(--spacing-sm);
     }
 
-    > h1 {
+    >h1 {
       font-size: var(--font-size-heading);
       text-align: center;
     }
@@ -27,12 +27,13 @@
       gap: var(--spacing-sm);
     }
 
-    .contact {
+    .contact,
+    .legal {
       display: flex;
       flex-direction: column;
       gap: var(--spacing-sm);
 
-      > .separator {
+      >.separator {
         display: none;
       }
     }
