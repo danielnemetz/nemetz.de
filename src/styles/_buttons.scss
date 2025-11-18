@@ -3,51 +3,50 @@
 // ==========================================================================
 .btn,
 .btn-link {
-    display: inline-block;
-    text-decoration: none;
-    padding: var(--btn-padding-y) var(--btn-padding-x);
-    border-radius: var(--btn-radius);
-    transition: var(--transition-duration);
-    cursor: pointer;
+  display: inline-block;
+  text-decoration: none;
+  padding: var(--btn-padding-y) var(--btn-padding-x);
+  border-radius: var(--btn-radius);
+  transition: var(--transition-duration);
+  cursor: pointer;
+
+  &:hover,
+  &:focus,
+  &:focus-visible {
+    outline: none;
+    transform: scale(var(--btn-scale-hover));
+    box-shadow: var(--shadow-icon-hover);
+  }
+
+  &:active {
+    transform: scale(var(--btn-scale-active));
+  }
+
+  &.primary {
+    background: var(--btn-primary-bg);
+    border: none;
+    color: var(--btn-primary-text);
+    box-shadow: var(--btn-shadow);
 
     &:hover,
     &:focus,
     &:focus-visible {
-        outline: none;
-        transform: scale(var(--btn-scale-hover));
-        box-shadow: var(--shadow-icon-hover);
+      box-shadow: var(--shadow-icon-hover);
     }
-
-    &:active {
-        transform: scale(var(--btn-scale-active));
-    }
-
-    &.primary {
-        background: var(--btn-primary-bg);
-        border: none;
-        color: var(--btn-primary-text);
-        box-shadow: var(--btn-shadow);
-
-        &:hover,
-        &:focus,
-        &:focus-visible {
-            box-shadow: var(--shadow-icon-hover);
-        }
-    }
+  }
 }
 
 .btn {
-    appearance: none;
-    border: var(--btn-border-width) solid var(--btn-border-color);
-    color: var(--btn-text-color);
-    background: var(--btn-bg);
-    box-shadow: var(--btn-shadow);
+  appearance: none;
+  border: var(--btn-border-width) solid var(--btn-border-color);
+  color: var(--btn-text-color);
+  background: var(--btn-bg);
+  box-shadow: var(--btn-shadow);
 }
 
 .btn-link {
-    border: var(--btn-border-width) solid transparent;
-    color: var(--btn-text-color);
-    background: var(--btn-bg);
-    box-shadow: var(--btn-shadow);
+  border: var(--btn-border-width) solid transparent;
+  color: var(--btn-text-color);
+  background: var(--btn-bg);
+  box-shadow: var(--btn-shadow);
 }
-

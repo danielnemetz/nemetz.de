@@ -9,7 +9,7 @@ services:
       - traefik-network
     labels:
       - 'traefik.enable=true'
-      
+
       # HTTPS Router - valid SPA routes and static assets (higher priority)
       - 'traefik.http.routers.nemetz-de.rule=Host(`nemetz.de`) && (Path(`/`) || Path(`/about`) || Path(`/imprint`) || PathPrefix(`/assets`) || PathPrefix(`/images`) || PathPrefix(`/fonts`) || PathPrefix(`/favicons`) || PathPrefix(`/i18n`) || Path(`/index.html`) || Path(`/404.html`))'
       - 'traefik.http.routers.nemetz-de.entrypoints=websecure'
@@ -17,7 +17,7 @@ services:
       - 'traefik.http.routers.nemetz-de.middlewares=headers-nemetz-de'
       - 'traefik.http.routers.nemetz-de.service=nemetz-de'
       - 'traefik.http.routers.nemetz-de.priority=10'
-      
+
       # HTTPS Router - catch-all for invalid routes (lower priority, passes through to Nginx)
       - 'traefik.http.routers.nemetz-de-404.rule=Host(`nemetz.de`)'
       - 'traefik.http.routers.nemetz-de-404.entrypoints=websecure'
@@ -25,27 +25,26 @@ services:
       - 'traefik.http.routers.nemetz-de-404.middlewares=headers-nemetz-de'
       - 'traefik.http.routers.nemetz-de-404.service=nemetz-de'
       - 'traefik.http.routers.nemetz-de-404.priority=1'
-      
+
       # HTTP Router - valid SPA routes and static assets (higher priority)
       - 'traefik.http.routers.nemetz-de-web.rule=Host(`nemetz.de`) && (Path(`/`) || Path(`/about`) || Path(`/imprint`) || PathPrefix(`/assets`) || PathPrefix(`/images`) || PathPrefix(`/fonts`) || PathPrefix(`/favicons`) || PathPrefix(`/i18n`) || Path(`/index.html`) || Path(`/404.html`))'
       - 'traefik.http.routers.nemetz-de-web.entrypoints=web'
       - 'traefik.http.routers.nemetz-de-web.service=nemetz-de'
       - 'traefik.http.routers.nemetz-de-web.priority=10'
-      
+
       # HTTP Router - catch-all for invalid routes (lower priority, passes through to Nginx)
       - 'traefik.http.routers.nemetz-de-web-404.rule=Host(`nemetz.de`)'
       - 'traefik.http.routers.nemetz-de-web-404.entrypoints=web'
       - 'traefik.http.routers.nemetz-de-web-404.service=nemetz-de'
       - 'traefik.http.routers.nemetz-de-web-404.priority=1'
-      
+
       # Middlewares
       - 'traefik.http.middlewares.headers-nemetz-de.headers.customrequestheaders.X-Forwarded-Proto=https'
       - 'traefik.http.middlewares.headers-nemetz-de.headers.customrequestheaders.X-Forwarded-Ssl=on'
-      
+
       # Services
       - 'traefik.http.services.nemetz-de.loadbalancer.server.port=80'
 
 networks:
   traefik-network:
     external: true
-

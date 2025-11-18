@@ -2,9 +2,8 @@
 // Mixins
 // ==========================================================================
 @mixin transition($property: all) {
-    -webkit-transition: $property var(--transition-duration);
-    -moz-transition: $property var(--transition-duration);
-    -o-transition: $property var(--transition-duration);
-    transition: $property var(--transition-duration);
+  -webkit-transition: $property var(--transition-duration);
+  -moz-transition: $property var(--transition-duration);
+  -o-transition: $property var(--transition-duration);
+  transition: $property var(--transition-duration);
 }
-

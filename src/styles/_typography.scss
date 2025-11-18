@@ -2,39 +2,38 @@
 // Typography
 // ==========================================================================
 .typography {
-    font-family: var(--font-family-prose);
-    font-size: var(--font-size-prose);
-    line-height: var(--line-height-prose);
-    font-weight: 400;
+  font-family: var(--font-family-prose);
+  font-size: var(--font-size-prose);
+  line-height: var(--line-height-prose);
+  font-weight: 400;
 
-    strong,
-    b {
-        font-weight: 900;
-    }
+  strong,
+  b {
+    font-weight: 900;
+  }
 
-    p + p,
-    * + ul,
-    * + ol {
-        margin-top: var(--spacing-md);
-    }
+  p + p,
+  * + ul,
+  * + ol {
+    margin-top: var(--spacing-md);
+  }
 
-    ul,
-    ol {
-        padding-left: 1.25rem;
-        margin-top: var(--spacing-sm);
-    }
+  ul,
+  ol {
+    padding-left: 1.25rem;
+    margin-top: var(--spacing-sm);
+  }
 
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-        line-height: 1.25;
-        margin-top: var(--spacing-md);
-        margin-bottom: var(--spacing-sm);
-        font-family: var(--font-family);
-        font-weight: 700;
-    }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    line-height: 1.25;
+    margin-top: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
+    font-family: var(--font-family);
+    font-weight: 700;
+  }
 }
-

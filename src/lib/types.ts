@@ -7,26 +7,25 @@ export type Lang = 'de' | 'en';
 export type LocaleDict = Record<string, unknown>;
 
 export interface ModalDef {
-    id: string;
-    path: string;
+  id: string;
+  path: string;
 }
 
 export interface OpenDialogOptions {
-    updateUrl?: boolean;
-    key?: ModalKey;
+  updateUrl?: boolean;
+  key?: ModalKey;
 }
 
 export interface CloseDialogOptions {
-    updateUrl?: boolean;
+  updateUrl?: boolean;
 }
 
 export interface SetLanguageOptions {
-    syncUrl?: boolean;
+  syncUrl?: boolean;
 }
 
 export const OPEN_ATTR = 'data-open-dialog';
 export const MODALS: Record<ModalKey, ModalDef> = {
-    about: { id: 'about-dialog', path: '/about' },
-    imprint: { id: 'imprint-dialog', path: '/imprint' },
+  about: { id: 'about-dialog', path: '/about' },
+  imprint: { id: 'imprint-dialog', path: '/imprint' },
 };
-

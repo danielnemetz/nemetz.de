@@ -197,6 +197,7 @@ Der Build-Prozess läuft in zwei Stufen:
 ### Docker Compose
 
 Die `compose.yml` konfiguriert:
+
 - Multi-Stage Build
 - Traefik-Integration (Labels)
 - Netzwerk: `traefik-network` (extern)
@@ -204,6 +205,7 @@ Die `compose.yml` konfiguriert:
 ### Nginx
 
 Die Nginx-Konfiguration (`nginx/default.conf`) bietet:
+
 - Gzip-Kompression
 - Optimierte Cache-Strategie:
   - HTML: `no-cache` (wird immer neu geladen für Cache-Busting)
@@ -214,6 +216,7 @@ Die Nginx-Konfiguration (`nginx/default.conf`) bietet:
 ### Vite
 
 Die Vite-Konfiguration (`vite.config.ts`):
+
 - Root: `./src`
 - Public Dir: `../public`
 - Build Output: `../dist`
@@ -258,10 +261,10 @@ Die Nginx-Konfiguration verwendet Port 80. Falls dieser belegt ist, kann die `co
 
 ## NPM Scripts
 
-| Script | Beschreibung |
-|--------|--------------|
-| `pnpm dev` | Startet Development Server |
-| `pnpm build` | Erstellt Production Build |
+| Script         | Beschreibung                  |
+| -------------- | ----------------------------- |
+| `pnpm dev`     | Startet Development Server    |
+| `pnpm build`   | Erstellt Production Build     |
 | `pnpm preview` | Preview des Production Builds |
 
 ## Wichtige Dateien
@@ -288,4 +291,3 @@ Die Nginx-Konfiguration verwendet Port 80. Falls dieser belegt ist, kann die `co
 - Bei Änderungen an Dependencies: `pnpm-lock.yaml` mit committen
 - **Cache-Busting**: Hash-basierte Dateinamen sorgen automatisch für Cache-Invalidierung bei Code-Änderungen
 - **Modulare Struktur**: TypeScript-Module in `src/lib/`, SASS-Module in `src/styles/`
-

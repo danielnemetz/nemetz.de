@@ -2,102 +2,101 @@
 // CSS Custom Properties (Design Tokens)
 // ==========================================================================
 :root {
-    // Colors
-    --color-primary: #d62222;
-    --color-text: white;
-    --color-text-link: #aaa;
-    --color-text-link-hover: white;
-    --color-text-separator: #999;
-    --color-bg-error: #ff000066;
-    --color-bg-footer: #00000055;
-    --color-bg-icon: white;
-    --color-border: white;
+  // Colors
+  --color-primary: #d62222;
+  --color-text: white;
+  --color-text-link: #aaa;
+  --color-text-link-hover: white;
+  --color-text-separator: #999;
+  --color-bg-error: #ff000066;
+  --color-bg-footer: #00000055;
+  --color-bg-icon: white;
+  --color-border: white;
 
-    // Shadows
-    --shadow-text: 0 1px 8px rgba(0, 0, 0, 0.8);
-    --shadow-text-hover: 0 1px 8px rgba(255, 255, 255, 0.5);
-    --shadow-box: 0 1px 8px rgba(0, 0, 0, 0.8);
-    --shadow-box-hover: 0 1px 8px rgba(255, 255, 255, 0.5);
-    --shadow-icon: 0 1px 8px rgba(255, 255, 255, 0.3);
-    --shadow-icon-hover: 0 1px 12px rgba(255, 255, 255, 0.6), 0 0 16px rgba(255, 255, 255, 0.3);
-    --shadow-primary-soft: 0 0 8px rgba(214, 34, 34, 0.35);
+  // Shadows
+  --shadow-text: 0 1px 8px rgba(0, 0, 0, 0.8);
+  --shadow-text-hover: 0 1px 8px rgba(255, 255, 255, 0.5);
+  --shadow-box: 0 1px 8px rgba(0, 0, 0, 0.8);
+  --shadow-box-hover: 0 1px 8px rgba(255, 255, 255, 0.5);
+  --shadow-icon: 0 1px 8px rgba(255, 255, 255, 0.3);
+  --shadow-icon-hover: 0 1px 12px rgba(255, 255, 255, 0.6), 0 0 16px rgba(255, 255, 255, 0.3);
+  --shadow-primary-soft: 0 0 8px rgba(214, 34, 34, 0.35);
 
-    // Spacing
-    --spacing-xs: 2px;
-    --spacing-sm: 10px;
-    --spacing-md: 20px;
-    --spacing-lg: 32px;
+  // Spacing
+  --spacing-xs: 2px;
+  --spacing-sm: 10px;
+  --spacing-md: 20px;
+  --spacing-lg: 32px;
 
-    // Typography
-    --font-family: 'Roboto Condensed', sans-serif;
-    --font-weight-normal: 300;
-    --font-size-heading: 2.0em;
-    --font-size-base: 1em;
-    --font-family-prose: 'Roboto Slab', serif;
-    --font-size-prose: 1.1em;
-    --line-height-prose: 1.6;
+  // Typography
+  --font-family: 'Roboto Condensed', sans-serif;
+  --font-weight-normal: 300;
+  --font-size-heading: 2em;
+  --font-size-base: 1em;
+  --font-family-prose: 'Roboto Slab', serif;
+  --font-size-prose: 1.1em;
+  --line-height-prose: 1.6;
 
-    // Sizes
-    --size-me: 100px;
-    --size-icon: 28px;
-    --size-icon-empty: 32px;
-    --size-border: 3px;
-    --size-max-width-text: 300px;
+  // Sizes
+  --size-me: 100px;
+  --size-icon: 28px;
+  --size-icon-empty: 32px;
+  --size-border: 3px;
+  --size-max-width-text: 300px;
 
-    // Border radius
-    --border-radius-circle: 50%;
+  // Border radius
+  --border-radius-circle: 50%;
 
-    // Transitions
-    --transition-duration: 0.3s;
+  // Transitions
+  --transition-duration: 0.3s;
 
-    // Button design tokens
-    --btn-padding-y: 8px;
-    --btn-padding-x: 14px;
-    --btn-radius: 8px;
-    --btn-scale-hover: 1.02;
-    --btn-scale-active: 0.98;
-    --btn-border-width: var(--size-border);
-    --btn-border-color: var(--color-border);
-    --btn-text-color: var(--color-text);
-    --btn-bg: transparent;
-    --btn-shadow: var(--shadow-box);
-    --btn-primary-bg: var(--color-primary);
-    --btn-primary-text: #fff;
+  // Button design tokens
+  --btn-padding-y: 8px;
+  --btn-padding-x: 14px;
+  --btn-radius: 8px;
+  --btn-scale-hover: 1.02;
+  --btn-scale-active: 0.98;
+  --btn-border-width: var(--size-border);
+  --btn-border-color: var(--color-border);
+  --btn-text-color: var(--color-text);
+  --btn-bg: transparent;
+  --btn-shadow: var(--shadow-box);
+  --btn-primary-bg: var(--color-primary);
+  --btn-primary-text: #fff;
 
-    // Dialog (modal) design tokens
-    --dialog-radius: 12px;
-    --dialog-padding: var(--spacing-lg);
-    --dialog-text: var(--color-text);
-    --dialog-bg: rgba(0, 0, 0, 0.7);
-    --dialog-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-    --dialog-max-width: 520px;
-    --dialog-max-height: 80vh;
-    --dialog-backdrop-bg: rgba(0, 0, 0, 0.5);
-    --dialog-backdrop-blur: 2px;
-    --dialog-anim-duration: 200ms;
+  // Dialog (modal) design tokens
+  --dialog-radius: 12px;
+  --dialog-padding: var(--spacing-lg);
+  --dialog-text: var(--color-text);
+  --dialog-bg: rgba(0, 0, 0, 0.7);
+  --dialog-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  --dialog-max-width: 520px;
+  --dialog-max-height: 80vh;
+  --dialog-backdrop-bg: rgba(0, 0, 0, 0.5);
+  --dialog-backdrop-blur: 2px;
+  --dialog-anim-duration: 200ms;
 
-    // Effects
-    --blur-backdrop: 3px;
+  // Effects
+  --blur-backdrop: 3px;
 
-    // Background images
-    --bg-image-back: url('/images/back.jpg');
-    --bg-image-me: url('/images/me.emoji.transparent.png');
-    --bg-position-center-top: center top;
-    --bg-position-center: center center;
+  // Background images
+  --bg-image-back: url('/images/back.jpg');
+  --bg-image-me: url('/images/me.emoji.transparent.png');
+  --bg-position-center-top: center top;
+  --bg-position-center: center center;
 
-    // Tooltip design tokens
-    --tooltip-bg: rgba(0, 0, 0, 0.85);
-    --tooltip-text: #fff;
-    --tooltip-radius: 6px;
-    --tooltip-padding: 6px 10px;
-    --tooltip-offset: 8px;
-    --tooltip-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    --tooltip-font-size: 14px;
+  // Tooltip design tokens
+  --tooltip-bg: rgba(0, 0, 0, 0.85);
+  --tooltip-text: #fff;
+  --tooltip-radius: 6px;
+  --tooltip-padding: 6px 10px;
+  --tooltip-offset: 8px;
+  --tooltip-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --tooltip-font-size: 14px;
 }
 
 @supports (height: 1dvh) {
-    :root {
-        --dialog-max-height: 80dvh;
-    }
+  :root {
+    --dialog-max-height: 80dvh;
+  }
 }
-

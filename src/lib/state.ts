@@ -10,14 +10,13 @@ export let currentLang: Lang = 'en';
 export const localeCache: Record<Lang, LocaleDict> = {} as Record<Lang, LocaleDict>;
 
 export function setCurrentKey(key: ModalKey | null): void {
-    currentKey = key;
+  currentKey = key;
 }
 
 export function setLastFocused(element: HTMLElement | null): void {
-    lastFocused = element;
+  lastFocused = element;
 }
 
 export function setCurrentLang(lang: Lang): void {
-    currentLang = lang;
+  currentLang = lang;
 }
-

@@ -2,98 +2,97 @@
 // Modal Dialog
 // ==========================================================================
 dialog {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    border: none;
-    border-radius: var(--dialog-radius);
-    padding: var(--dialog-padding);
-    color: var(--dialog-text);
-    background: var(--dialog-bg);
-    backdrop-filter: blur(var(--blur-backdrop));
-    box-shadow: var(--dialog-shadow);
-    max-width: var(--dialog-max-width);
-    width: calc(100% - 2 * var(--dialog-padding));
-    max-height: var(--dialog-max-height);
-    overflow: hidden;
-    animation: dialog-scale-in var(--dialog-anim-duration) ease-out;
-    transform-origin: center;
-    will-change: transform, opacity;
-    color-scheme: dark;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: none;
+  border-radius: var(--dialog-radius);
+  padding: var(--dialog-padding);
+  color: var(--dialog-text);
+  background: var(--dialog-bg);
+  backdrop-filter: blur(var(--blur-backdrop));
+  box-shadow: var(--dialog-shadow);
+  max-width: var(--dialog-max-width);
+  width: calc(100% - 2 * var(--dialog-padding));
+  max-height: var(--dialog-max-height);
+  overflow: hidden;
+  animation: dialog-scale-in var(--dialog-anim-duration) ease-out;
+  transform-origin: center;
+  will-change: transform, opacity;
+  color-scheme: dark;
 
-    &::backdrop {
-        background: var(--dialog-backdrop-bg);
-        backdrop-filter: blur(var(--dialog-backdrop-blur));
-        animation: backdrop-fade-in var(--dialog-anim-duration) ease-out;
-    }
+  &::backdrop {
+    background: var(--dialog-backdrop-bg);
+    backdrop-filter: blur(var(--dialog-backdrop-blur));
+    animation: backdrop-fade-in var(--dialog-anim-duration) ease-out;
+  }
 }
 
 .dialog-content {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-md);
-    max-height: var(--dialog-max-height);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  max-height: var(--dialog-max-height);
 
-    h2 {
-        font-size: 1.25rem;
-    }
+  h2 {
+    font-size: 1.25rem;
+  }
 }
 
 .dialog-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--spacing-sm);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-sm);
 }
 
 .dialog-controls {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
 
-    .lang-toggle {
-        padding: 2px 6px;
+  .lang-toggle {
+    padding: 2px 6px;
 
-        &[aria-pressed='true'] {
-            font-weight: 700;
-            color: var(--color-text);
-            text-shadow: var(--shadow-text-hover);
-            border-bottom: 2px solid var(--color-primary);
-            border-radius: 0;
-        }
-
-        &[aria-pressed='false'] {
-            opacity: 0.8;
-        }
+    &[aria-pressed='true'] {
+      font-weight: 700;
+      color: var(--color-text);
+      text-shadow: var(--shadow-text-hover);
+      border-bottom: 2px solid var(--color-primary);
+      border-radius: 0;
     }
+
+    &[aria-pressed='false'] {
+      opacity: 0.8;
+    }
+  }
 }
 
 .dialog-body {
-    flex: 1 1 auto;
-    overflow-y: auto;
-    min-height: 0;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.45) transparent;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  min-height: 0;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.45) transparent;
 
-    &::-webkit-scrollbar {
-        width: 10px;
-    }
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
 
-    &::-webkit-scrollbar-track {
-        background: transparent;
-    }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
 
-    &::-webkit-scrollbar-thumb {
-        background-color: rgba(255, 255, 255, 0.45);
-        border-radius: 8px;
-        border: 2px solid transparent;
-    }
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.45);
+    border-radius: 8px;
+    border: 2px solid transparent;
+  }
 }
 
 .dialog-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: var(--spacing-sm);
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-sm);
 }
-
