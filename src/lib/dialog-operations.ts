@@ -17,7 +17,9 @@ export function openDialog(event: Event | null, options: OpenDialogOptions = {})
   let dialogKey: ModalKey | null = key ?? null;
   if (!dialogKey && event && event.currentTarget instanceof HTMLElement) {
     const attr = event.currentTarget.getAttribute(OPEN_ATTR);
-    dialogKey = (attr === 'about' || attr === 'imprint' ? attr : null) as ModalKey | null;
+    dialogKey = (
+      attr === 'about' || attr === 'imprint' || attr === 'privacy' ? attr : null
+    ) as ModalKey | null;
   }
   if (!dialogKey || !MODALS[dialogKey]) {
     return;

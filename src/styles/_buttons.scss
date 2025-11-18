@@ -10,12 +10,20 @@
   transition: var(--transition-duration);
   cursor: pointer;
 
-  &:hover,
-  &:focus,
-  &:focus-visible {
-    outline: none;
+  &:hover {
     transform: scale(var(--btn-scale-hover));
     box-shadow: var(--shadow-icon-hover);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+    transform: scale(var(--btn-scale-hover));
+    box-shadow: var(--shadow-icon-hover);
+  }
+
+  &:focus:not(:focus-visible) {
+    outline: none;
   }
 
   &:active {
@@ -28,10 +36,13 @@
     color: var(--btn-primary-text);
     box-shadow: var(--btn-shadow);
 
-    &:hover,
-    &:focus,
-    &:focus-visible {
+    &:hover {
       box-shadow: var(--shadow-icon-hover);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
     }
   }
 }

@@ -8,7 +8,7 @@ import { showDialog, hideDialog } from './dialog';
 import { getLangFromUrl } from './language';
 import { setLanguage } from './language';
 import { getBrowserDefaultLang } from './language';
-import { renderModal } from './rendering';
+import { renderModal, renderPage } from './rendering';
 
 export function initPopstateSync(): void {
   window.addEventListener('popstate', () => {
@@ -19,6 +19,7 @@ export function initPopstateSync(): void {
       const lang = getLangFromUrl();
       if (lang) {
         setLanguage(lang, { syncUrl: false });
+        void renderPage();
       }
       void renderModal(key);
     } else if (currentKey) {

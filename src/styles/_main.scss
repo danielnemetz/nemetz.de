@@ -12,6 +12,7 @@ main {
   gap: var(--spacing-md);
 
   .me {
+    display: block;
     width: var(--size-me);
     height: var(--size-me);
     box-shadow: var(--shadow-box);
@@ -24,8 +25,18 @@ main {
     @include transition();
 
     &:hover {
-      box-shadow: var(--shadow-box-hover);
+      box-shadow: var(--shadow-box), var(--shadow-box-hover);
       transform: scale(1.05);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+      border-radius: var(--border-radius-circle);
+    }
+
+    &:focus:not(:focus-visible) {
+      outline: none;
     }
   }
 

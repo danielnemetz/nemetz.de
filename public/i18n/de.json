@@ -2,6 +2,9 @@
   "common": {
     "close": "Schließen"
   },
+  "main": {
+    "subtitle": "Software Engineer aus Hamburg, Deutschland"
+  },
   "about": {
     "title": "Das bin ich.",
     "intro": "Moin! Ich bin Senior Software Engineer mit über einem Jahrzehnt Branchenerfahrung. Ich bin spezialisiert auf den Aufbau skalierbarer und nachhaltiger Softwarearchitekturen und die Restrukturierung komplexer Systeme zur Verbesserung von Performance und Wartbarkeit.",
@@ -17,5 +20,17 @@
     "addressHtml": "August-Bebel-Straße 189<br>21465 Wentorf",
     "contactHtml": "<strong>Kontakt:</strong><br>Telefon: <a href=\\\"tel:+494041366419\\\">+49 40 413 66 419</a><br>E‑Mail: <a href=\\\"mailto:daniel@nemetz.de\\\">daniel@nemetz.de</a>",
     "consumerNoticeHtml": "<strong>Verbraucher­streit­beilegung/Universal­schlichtungs­stelle</strong><br>Ich bin nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucher­schlichtungsstelle teilzunehmen."
+  },
+  "privacy": {
+    "title": "Datenschutzerklärung",
+    "intro": "Die folgende Datenschutzerklärung gilt für die Nutzung dieser Website. Der Betreiber dieser Website nimmt den Schutz Ihrer persönlichen Daten sehr ernst.",
+    "responsibleHtml": "<strong>Verantwortliche Stelle:</strong><br>Daniel Nemetz<br>August-Bebel-Straße 189<br>21465 Wentorf<br>Deutschland",
+    "contactHtml": "<strong>Kontakt:</strong><br>Telefon: <a href=\\\"tel:+494041366419\\\">+49 40 413 66 419</a><br>E‑Mail: <a href=\\\"mailto:daniel@nemetz.de\\\">daniel@nemetz.de</a>",
+    "dataCollection": "<strong>Datenerhebung und -verarbeitung</strong><br>Beim Besuch dieser Website werden durch den Webserver automatisch Informationen wie Ihre IP-Adresse, Datum und Uhrzeit des Zugriffs, Browsertyp und -version sowie die aufgerufenen Seiten protokolliert. Diese Daten werden aus technischen Gründen zur Gewährleistung der Sicherheit und Funktionalität der Website erhoben. Die Daten werden maximal 7 Tage gespeichert und anschließend automatisch gelöscht.",
+    "cookies": "<strong>Cookies und Tracking</strong><br>Diese Website verwendet keine Cookies oder Tracking-Technologien. Es werden keine personenbezogenen Daten über die oben genannten Server-Logs hinaus erhoben oder verarbeitet.",
+    "externalLinks": "<strong>Externe Links</strong><br>Diese Website enthält Links zu externen Websites (z. B. LinkedIn). Diese Datenschutzerklärung gilt nicht für diese externen Websites. Bitte beachten Sie die jeweiligen Datenschutzerklärungen dieser Anbieter.",
+    "emailContact": "<strong>E-Mail-Kontakt</strong><br>Wenn Sie uns per E-Mail kontaktieren, werden Ihre E-Mail-Adresse und der Inhalt Ihrer Nachricht gespeichert, um Ihre Anfrage zu bearbeiten und zu beantworten. Diese Daten werden nach vollständiger Bearbeitung Ihrer Anfrage gelöscht, sofern keine gesetzlichen Aufbewahrungsfristen eine längere Speicherung erfordern.",
+    "rightsHtml": "<strong>Ihre Rechte</strong><br>Sie haben das Recht, Auskunft über die zu Ihrer Person gespeicherten Daten zu erhalten (Art. 15 DSGVO), die Berichtigung (Art. 16 DSGVO), Löschung (Art. 17 DSGVO) oder Einschränkung der Verarbeitung (Art. 18 DSGVO) zu verlangen sowie das Recht auf Datenübertragbarkeit (Art. 20 DSGVO). Außerdem haben Sie das Recht, der Verarbeitung zu widersprechen (Art. 21 DSGVO) und Beschwerde bei einer Aufsichtsbehörde einzulegen (Art. 77 DSGVO).",
+    "changes": "<strong>Änderungen dieser Datenschutzerklärung</strong><br>Wir behalten uns vor, diese Datenschutzerklärung anzupassen, damit sie stets den aktuellen rechtlichen Anforderungen entspricht oder um Änderungen unserer Leistungen in der Datenschutzerklärung umzusetzen. Die jeweils aktuelle Version ist auf dieser Seite abrufbar."
   }
 }

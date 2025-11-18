@@ -18,26 +18,23 @@
 </head>
 
 <body>
+  <div class="lang-selector" role="toolbar" aria-label="Language">
+    <button type="button" class="lang-toggle" data-lang="de" aria-pressed="false" aria-label="Deutsch">
+      <span class="lang-option">DE</span>
+    </button>
+    <button type="button" class="lang-toggle" data-lang="en" aria-pressed="true" aria-label="English">
+      <span class="lang-option">EN</span>
+    </button>
+  </div>
   <main>
-    <a href="/about" aria-label="About Daniel Nemetz" data-open-dialog="about" data-tooltip="About me">
-      <div class="me"></div>
-    </a>
+    <a href="/about" class="me" aria-label="About Daniel Nemetz" data-open-dialog="about" data-tooltip="About me"></a>
     <h1><a href="/about" data-open-dialog="about">Daniel Nemetz</a></h1>
-    <p>Software Engineer based in Hamburg, Germany</p>
+    <p data-i18n="main.subtitle">Software Engineer based in Hamburg, Germany</p>
   </main>
   <dialog id="about-dialog" aria-labelledby="about-title">
     <form method="dialog" class="dialog-content">
       <div class="dialog-header">
         <h2 id="about-title" data-i18n="about.title">This is me.</h2>
-        <div class="dialog-controls" role="toolbar" aria-label="Language">
-          <button type="button" class="btn-link lang-toggle" data-lang="de" aria-pressed="false">
-            DE
-          </button>
-          <span class="separator">&middot;</span>
-          <button type="button" class="btn-link lang-toggle" data-lang="en" aria-pressed="true">
-            EN
-          </button>
-        </div>
       </div>
       <div class="dialog-body typography">
         <p data-i18n="about.intro">
@@ -73,15 +70,6 @@
     <form method="dialog" class="dialog-content">
       <div class="dialog-header">
         <h2 id="imprint-title" data-i18n="imprint.title">Imprint</h2>
-        <div class="dialog-controls" role="toolbar" aria-label="Language">
-          <button type="button" class="btn-link lang-toggle" data-lang="de" aria-pressed="false">
-            DE
-          </button>
-          <span class="separator">&middot;</span>
-          <button type="button" class="btn-link lang-toggle" data-lang="en" aria-pressed="true">
-            EN
-          </button>
-        </div>
       </div>
       <div class="dialog-body typography">
         <p data-i18n="imprint.legalIntro">Information according to § 5 DDG</p>
@@ -102,19 +90,87 @@
       </div>
     </form>
   </dialog>
+  <dialog id="privacy-dialog" aria-labelledby="privacy-title">
+    <form method="dialog" class="dialog-content">
+      <div class="dialog-header">
+        <h2 id="privacy-title" data-i18n="privacy.title">Privacy Policy</h2>
+      </div>
+      <div class="dialog-body typography">
+        <p data-i18n="privacy.intro">
+          The following privacy policy applies to the use of this website. The operator of this
+          website takes the protection of your personal data very seriously.
+        </p>
+        <p data-i18n="privacy.responsibleHtml">
+          <strong>Responsible party:</strong><br />Daniel Nemetz<br />August-Bebel-Straße 189<br />21465
+          Wentorf<br />Germany
+        </p>
+        <p data-i18n="privacy.contactHtml">
+          <strong>Contact:</strong><br />Phone: <a href="tel:+494041366419">+49 40 413 66 419</a><br />Email:
+          <a href="mailto:daniel@nemetz.de">daniel@nemetz.de</a>
+        </p>
+        <p data-i18n="privacy.dataCollection">
+          <strong>Data collection and processing</strong><br />When you visit this website, the
+          web server automatically logs information such as your IP address, the date and time of
+          access, the browser type and version, and the pages accessed. This data is collected for
+          technical reasons to ensure the security and functionality of the website. The data is
+          stored for a maximum of 7 days and then automatically deleted.
+        </p>
+        <p data-i18n="privacy.cookies">
+          <strong>Cookies and tracking</strong><br />This website does not use cookies or tracking
+          technologies. No personal data is collected or processed beyond the server logs
+          mentioned above.
+        </p>
+        <p data-i18n="privacy.externalLinks">
+          <strong>External links</strong><br />This website contains links to external websites
+          (e.g., LinkedIn). This privacy policy does not apply to these external websites. Please
+          refer to the respective privacy policies of these providers.
+        </p>
+        <p data-i18n="privacy.emailContact">
+          <strong>Email contact</strong><br />If you contact us via email, your email address and
+          the content of your message will be stored to process and respond to your inquiry. This
+          data will be deleted after your inquiry has been fully processed, unless legal retention
+          periods require longer storage.
+        </p>
+        <p data-i18n="privacy.rightsHtml">
+          <strong>Your rights</strong><br />You have the right to obtain information about the
+          personal data stored about you (Art. 15 GDPR), to request correction (Art. 16 GDPR),
+          deletion (Art. 17 GDPR), or restriction of processing (Art. 18 GDPR), as well as the
+          right to data portability (Art. 20 GDPR). You also have the right to object to
+          processing (Art. 21 GDPR) and to lodge a complaint with a supervisory authority (Art. 77
+          GDPR).
+        </p>
+        <p data-i18n="privacy.changes">
+          <strong>Changes to this privacy policy</strong><br />We reserve the right to update this
+          privacy policy to reflect changes in legal requirements or our services. The current
+          version is always available on this page.
+        </p>
+      </div>
+      <div class="dialog-actions" role="toolbar" aria-label="Privacy actions">
+        <button class="btn" value="close" autofocus data-i18n="common.close">Close</button>
+      </div>
+    </form>
+  </dialog>
   <footer>
     <div class="empty"></div>
-    <div class="contact" role="toolbar" aria-label="Footer contact">
-      <a href="/about" data-open-dialog="about" aria-label="About Daniel Nemetz">Daniel Nemetz</a>
-      <span class="separator">&middot;</span>
-      <a href="mailto:daniel@nemetz.de">daniel@nemetz.de</a>
-      <span class="separator">&middot;</span>
-      <a href="tel:+494041366419">+49&nbsp;40&nbsp;413&nbsp;66&nbsp;419</a>
-      <span class="separator">&middot;</span>
-      <a href="/imprint" data-open-dialog="imprint">Imprint</a>
+    <div class="footer-content">
+      <div class="contact" role="toolbar" aria-label="Footer contact">
+        <a href="/about" data-open-dialog="about" aria-label="About Daniel Nemetz">Daniel Nemetz</a>
+        <span class="separator">&middot;</span>
+        <a href="mailto:daniel@nemetz.de">daniel@nemetz.de</a>
+        <span class="separator">&middot;</span>
+        <a href="tel:+494041366419">+49&nbsp;40&nbsp;413&nbsp;66&nbsp;419</a>
+      </div>
+      <div class="footer-divider"></div>
+      <div class="legal" role="toolbar" aria-label="Footer legal">
+        <span class="copyright">2025</span>
+        <span class="separator">&middot;</span>
+        <a href="/imprint" data-open-dialog="imprint" data-i18n="imprint.title">Imprint</a>
+        <span class="separator">&middot;</span>
+        <a href="/privacy" data-open-dialog="privacy" data-i18n="privacy.title">Privacy Policy</a>
+      </div>
     </div>
     <div class="icons">
-      <a href="https://linkedin.com/in/daniel-nemetz" target="_blank">
+      <a href="https://linkedin.com/in/daniel-nemetz" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
         <div class="icon">
           <img src="/images/linkedin.svg" alt="LinkedIn" />
         </div>
