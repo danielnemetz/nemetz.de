@@ -36,6 +36,19 @@ jobs:
           timeout: 120s
           script: |
             cd ~/nemetz.de
+            echo "=== Current directory ==="
+            pwd
+            echo "=== Git status ==="
+            git status
+            echo "=== Pulling latest changes ==="
             git pull origin main
-            docker compose up -d --build
+            echo "=== Docker compose build ==="
+            docker compose build --no-cache
+            echo "=== Docker compose up ==="
+            docker compose up -d
+            echo "=== Container status ==="
+            docker compose ps
+            echo "=== Recent container logs ==="
+            docker compose logs --tail=20
+            echo "=== Cleanup old images ==="
             docker image prune -f
