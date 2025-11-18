@@ -22,7 +22,7 @@ jobs:
       - name: Lint and build
         run: pnpm lint && pnpm build
 
-      - name: Copy dist files to server
+      - name: Copy files to server
         uses: appleboy/scp-action@v1
         with:
           host: ${{ secrets.SERVER_HOST }}
@@ -34,8 +34,8 @@ jobs:
           proxy_key: ${{ secrets.SERVER_SSH_KEY }}
           proxy_port: ${{ secrets.BASTION_PORT || 22 }}
           timeout: 120s
-          source: 'dist/*'
-          target: '~/nemetz.de/dist/'
+          source: 'dist/*,Dockerfile,compose.yml,nginx'
+          target: '~/nemetz.de/'
 
       - name: Deploy via SSH (via Bastion)
         uses: appleboy/ssh-action@v1
