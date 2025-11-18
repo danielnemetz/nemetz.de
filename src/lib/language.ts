@@ -40,6 +40,8 @@ export function setLanguage(lang: Lang, options: SetLanguageOptions = {}): void 
   }
   setCurrentLang(lang);
   localStorage.setItem('lang', lang);
+  // Update HTML lang attribute for accessibility (screen readers, browser features)
+  document.documentElement.setAttribute('lang', lang);
   if (syncUrl && currentKey) {
     const def = MODALS[currentKey];
     const url = new URL(location.href);

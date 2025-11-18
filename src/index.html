@@ -1,135 +1,127 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta
-      name="description"
-      content="Daniel Nemetz - Senior Software Engineer based in Hamburg, Germany. Contact information and professional profile."
-    />
 
-    <title>Daniel Nemetz &middot; Senior Software Engineer &middot; nemetz.de</title>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description"
+    content="Daniel Nemetz - Senior Software Engineer based in Hamburg, Germany. Contact information and professional profile." />
 
-    <!-- Favicons -->
-    <link rel="icon" type="image/png" href="/favicons/favicon-96x96.png" sizes="96x96" />
-    <link rel="icon" type="image/svg+xml" href="/favicons/favicon.svg" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png" />
-    <link rel="manifest" href="/favicons/site.webmanifest" />
-    <link rel="icon" href="/favicons/favicon.ico" sizes="any" />
-  </head>
+  <title>Daniel Nemetz &middot; Senior Software Engineer &middot; nemetz.de</title>
 
-  <body>
-    <main>
-      <a
-        href="/about"
-        aria-label="About Daniel Nemetz"
-        data-open-dialog="about"
-        data-tooltip="About me"
-      >
-        <div class="me"></div>
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" href="/favicons/favicon-96x96.png" sizes="96x96" />
+  <link rel="icon" type="image/svg+xml" href="/favicons/favicon.svg" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png" />
+  <link rel="manifest" href="/favicons/site.webmanifest" />
+  <link rel="icon" href="/favicons/favicon.ico" sizes="any" />
+</head>
+
+<body>
+  <main>
+    <a href="/about" aria-label="About Daniel Nemetz" data-open-dialog="about" data-tooltip="About me">
+      <div class="me"></div>
+    </a>
+    <h1><a href="/about" data-open-dialog="about">Daniel Nemetz</a></h1>
+    <p>Software Engineer based in Hamburg, Germany</p>
+  </main>
+  <dialog id="about-dialog" aria-labelledby="about-title">
+    <form method="dialog" class="dialog-content">
+      <div class="dialog-header">
+        <h2 id="about-title" data-i18n="about.title">This is me.</h2>
+        <div class="dialog-controls" role="toolbar" aria-label="Language">
+          <button type="button" class="btn-link lang-toggle" data-lang="de" aria-pressed="false">
+            DE
+          </button>
+          <span class="separator">&middot;</span>
+          <button type="button" class="btn-link lang-toggle" data-lang="en" aria-pressed="true">
+            EN
+          </button>
+        </div>
+      </div>
+      <div class="dialog-body typography">
+        <p data-i18n="about.intro">
+          Hello! I'm a Senior Software Engineer with over a decade of experience in the industry.
+          I specialize in building scalable, sustainable software architectures and restructuring
+          complex systems to enhance performance and maintainability.
+        </p>
+        <p data-i18n="about.expertise">
+          While my core expertise lies in Angular, TypeScript, and NodeJS, I'm also deeply
+          proficient in modern DevOps principles. I have hands-on experience migrating
+          infrastructure using IaC tools like Terraform and Ansible, setting up CI/CD pipelines,
+          and working extensively with containerization (Docker).
+        </p>
+        <p data-i18n="about.mentoring_accessibility">
+          Beyond the code, I am passionate about fostering technical excellence in teams. I enjoy
+          mentoring fellow developers and serving as the communication bridge between engineering,
+          UI/UX designers, and product owners. I am also a dedicated advocate for web
+          accessibility, with deep knowledge of implementing applications that meet stringent WCAG
+          standards.
+        </p>
+        <p data-i18n="about.outro">
+          I'm always open to discussing new challenges or collaborating on interesting projects.
+          Feel free to get in touch or connect with me on LinkedIn.
+        </p>
+      </div>
+      <div class="dialog-actions" role="toolbar" aria-label="Dialog actions">
+        <a class="btn-link primary" href="mailto:daniel@nemetz.de" data-i18n="about.cta">Get in touch</a>
+        <button class="btn" value="close" autofocus data-i18n="common.close">Close</button>
+      </div>
+    </form>
+  </dialog>
+  <dialog id="imprint-dialog" aria-labelledby="imprint-title">
+    <form method="dialog" class="dialog-content">
+      <div class="dialog-header">
+        <h2 id="imprint-title" data-i18n="imprint.title">Imprint</h2>
+        <div class="dialog-controls" role="toolbar" aria-label="Language">
+          <button type="button" class="btn-link lang-toggle" data-lang="de" aria-pressed="false">
+            DE
+          </button>
+          <span class="separator">&middot;</span>
+          <button type="button" class="btn-link lang-toggle" data-lang="en" aria-pressed="true">
+            EN
+          </button>
+        </div>
+      </div>
+      <div class="dialog-body typography">
+        <p data-i18n="imprint.legalIntro">Information according to § 5 DDG</p>
+        <p data-i18n="imprint.name">Daniel Nemetz</p>
+        <p data-i18n="imprint.addressHtml">August-Bebel-Straße 189<br />21465 Wentorf</p>
+        <p data-i18n="imprint.contactHtml">
+          <strong>Contact:</strong><br />Phone: <a href="tel:+494041366419">+49 40 413 66 419</a><br />Email:
+          <a href="mailto:daniel@nemetz.de">daniel@nemetz.de</a>
+        </p>
+        <p data-i18n="imprint.consumerNoticeHtml">
+          <strong>Consumer dispute resolution / Universal arbitration body</strong><br />I do not
+          participate in dispute resolution proceedings before a consumer arbitration board and am
+          not obliged to do so.
+        </p>
+      </div>
+      <div class="dialog-actions" role="toolbar" aria-label="Imprint actions">
+        <button class="btn" value="close" autofocus data-i18n="common.close">Close</button>
+      </div>
+    </form>
+  </dialog>
+  <footer>
+    <div class="empty"></div>
+    <div class="contact" role="toolbar" aria-label="Footer contact">
+      <a href="/about" data-open-dialog="about" aria-label="About Daniel Nemetz">Daniel Nemetz</a>
+      <span class="separator">&middot;</span>
+      <a href="mailto:daniel@nemetz.de">daniel@nemetz.de</a>
+      <span class="separator">&middot;</span>
+      <a href="tel:+494041366419">+49&nbsp;40&nbsp;413&nbsp;66&nbsp;419</a>
+      <span class="separator">&middot;</span>
+      <a href="/imprint" data-open-dialog="imprint">Legal Notice</a>
+    </div>
+    <div class="icons">
+      <a href="https://linkedin.com/in/daniel-nemetz" target="_blank">
+        <div class="icon">
+          <img src="/images/linkedin.svg" alt="LinkedIn" />
+        </div>
       </a>
-      <h1><a href="/about" data-open-dialog="about">Daniel Nemetz</a></h1>
-      <p>Software Engineer based in Hamburg, Germany</p>
-    </main>
-    <dialog id="about-dialog" aria-labelledby="about-title">
-      <form method="dialog" class="dialog-content">
-        <div class="dialog-header">
-          <h2 id="about-title" data-i18n="about.title">This is me.</h2>
-          <div class="dialog-controls" role="toolbar" aria-label="Language">
-            <button type="button" class="btn-link lang-toggle" data-lang="de" aria-pressed="false">
-              DE
-            </button>
-            <span class="separator">&middot;</span>
-            <button type="button" class="btn-link lang-toggle" data-lang="en" aria-pressed="true">
-              EN
-            </button>
-          </div>
-        </div>
-        <div class="dialog-body typography">
-          <p data-i18n="about.intro">
-            Hello! I'm a Senior Software Engineer with over a decade of experience in the industry.
-            I specialize in building scalable, sustainable software architectures and restructuring
-            complex systems to enhance performance and maintainability.
-          </p>
-          <p data-i18n="about.expertise">
-            While my core expertise lies in Angular, TypeScript, and NodeJS, I'm also deeply
-            proficient in modern DevOps principles. I have hands-on experience migrating
-            infrastructure using IaC tools like Terraform and Ansible, setting up CI/CD pipelines,
-            and working extensively with containerization (Docker).
-          </p>
-          <p data-i18n="about.mentoring_accessibility">
-            Beyond the code, I am passionate about fostering technical excellence in teams. I enjoy
-            mentoring fellow developers and serving as the communication bridge between engineering,
-            UI/UX designers, and product owners. I am also a dedicated advocate for web
-            accessibility, with deep knowledge of implementing applications that meet stringent WCAG
-            standards.
-          </p>
-          <p data-i18n="about.outro">
-            I'm always open to discussing new challenges or collaborating on interesting projects.
-            Feel free to get in touch or connect with me on LinkedIn.
-          </p>
-        </div>
-        <div class="dialog-actions" role="toolbar" aria-label="Dialog actions">
-          <a class="btn-link primary" href="mailto:daniel@nemetz.de" data-i18n="about.cta"
-            >Get in touch</a
-          >
-          <button class="btn" value="close" autofocus data-i18n="common.close">Close</button>
-        </div>
-      </form>
-    </dialog>
-    <dialog id="imprint-dialog" aria-labelledby="imprint-title">
-      <form method="dialog" class="dialog-content">
-        <div class="dialog-header">
-          <h2 id="imprint-title" data-i18n="imprint.title">Imprint</h2>
-          <div class="dialog-controls" role="toolbar" aria-label="Language">
-            <button type="button" class="btn-link lang-toggle" data-lang="de" aria-pressed="false">
-              DE
-            </button>
-            <span class="separator">&middot;</span>
-            <button type="button" class="btn-link lang-toggle" data-lang="en" aria-pressed="true">
-              EN
-            </button>
-          </div>
-        </div>
-        <div class="dialog-body typography">
-          <p data-i18n="imprint.legalIntro">Information according to § 5 DDG</p>
-          <p data-i18n="imprint.name">Daniel Nemetz</p>
-          <p data-i18n="imprint.addressHtml">August-Bebel-Straße 189<br />21465 Wentorf</p>
-          <p data-i18n="imprint.contactHtml">
-            <strong>Contact:</strong><br />Phone: <a href="tel:+494041366419">+49 40 413 66 419</a
-            ><br />Email:
-            <a href="mailto:daniel@nemetz.de">daniel@nemetz.de</a>
-          </p>
-          <p data-i18n="imprint.consumerNoticeHtml">
-            <strong>Consumer dispute resolution / Universal arbitration body</strong><br />I do not
-            participate in dispute resolution proceedings before a consumer arbitration board and am
-            not obliged to do so.
-          </p>
-        </div>
-        <div class="dialog-actions" role="toolbar" aria-label="Imprint actions">
-          <button class="btn" value="close" autofocus data-i18n="common.close">Close</button>
-        </div>
-      </form>
-    </dialog>
-    <footer>
-      <div class="empty"></div>
-      <div class="contact" role="toolbar" aria-label="Footer contact">
-        <a href="/about" data-open-dialog="about" aria-label="About Daniel Nemetz">Daniel Nemetz</a>
-        <span class="separator">&middot;</span>
-        <a href="mailto:daniel@nemetz.de">daniel@nemetz.de</a>
-        <span class="separator">&middot;</span>
-        <a href="tel:+494041366419">+49&nbsp;40&nbsp;413&nbsp;66&nbsp;419</a>
-        <span class="separator">&middot;</span>
-        <a href="/imprint" data-open-dialog="imprint">Imprint</a>
-      </div>
-      <div class="icons">
-        <a href="https://linkedin.com/in/daniel-nemetz" target="_blank">
-          <div class="icon">
-            <img src="/images/linkedin.svg" alt="LinkedIn" />
-          </div>
-        </a>
-      </div>
-    </footer>
-    <script type="module" src="/app.ts"></script>
-  </body>
+    </div>
+  </footer>
+  <script type="module" src="/app.ts"></script>
+</body>
+
 </html>
