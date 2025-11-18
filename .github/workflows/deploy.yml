@@ -34,8 +34,9 @@ jobs:
           proxy_key: ${{ secrets.SERVER_SSH_KEY }}
           proxy_port: ${{ secrets.BASTION_PORT || 22 }}
           timeout: 120s
-          source: 'dist/*,Dockerfile,compose.yml,nginx'
+          source: 'dist,Dockerfile,compose.yml,nginx'
           target: '~/nemetz.de/'
+          rm: true
 
       - name: Deploy via SSH (via Bastion)
         uses: appleboy/ssh-action@v1
@@ -51,15 +52,24 @@ jobs:
           timeout: 120s
           script: |
             cd ~/nemetz.de
-            echo "=== Ensuring dist directory exists ==="
-            mkdir -p dist
-            echo "=== Docker compose build ==="
-            docker compose build --no-cache
+            echo "=== Checking dist files on server ==="
+            ls -la dist/ | head -10
+            echo "=== File sizes ==="
+            ls -lh dist/*.html
+            echo "=== Stopping and removing old container ==="
+            docker compose down
+            echo "=== Removing old images ==="
+            docker image rm nemetzde-web || true
+            docker system prune -f
+            echo "=== Docker compose build (no cache) ==="
+            docker compose build --no-cache --pull
             echo "=== Docker compose up ==="
             docker compose up -d
             echo "=== Container status ==="
             docker compose ps
+            echo "=== Checking files in container ==="
+            docker compose exec web ls -lh /usr/share/nginx/html/*.html
+            echo "=== Checking index.html timestamp ==="
+            docker compose exec web stat /usr/share/nginx/html/index.html
             echo "=== Recent container logs ==="
             docker compose logs --tail=20
-            echo "=== Cleanup old images ==="
-            docker image prune -f
