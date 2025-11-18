@@ -261,11 +261,29 @@ Die Nginx-Konfiguration verwendet Port 80. Falls dieser belegt ist, kann die `co
 
 ## NPM Scripts
 
-| Script         | Beschreibung                  |
-| -------------- | ----------------------------- |
-| `pnpm dev`     | Startet Development Server    |
-| `pnpm build`   | Erstellt Production Build     |
-| `pnpm preview` | Preview des Production Builds |
+| Script             | Beschreibung                                  |
+| ------------------ | --------------------------------------------- |
+| `pnpm dev`         | Startet Development Server                    |
+| `pnpm build`       | Erstellt Production Build                     |
+| `pnpm preview`     | Preview des Production Builds                 |
+| `pnpm lint`        | Führt ESLint, Stylelint und HTMLHint aus      |
+| `pnpm format`      | Formatiert alle Dateien mit Prettier          |
+| `pnpm format:check`| Prüft Formatierung ohne Änderungen vorzunehmen |
+
+### Linting & Formatting
+
+- **ESLint** (TypeScript) + `typescript-eslint` + `eslint-plugin-prettier`
+- **Stylelint** (SCSS/CSS) inklusive Prettier-kompatibler Regeln
+- **HTMLHint** für HTML-Templates
+- Einheitliche Formatierung via **Prettier** (`.prettierrc.json`)
+
+```bash
+# Alles prüfen
+pnpm lint
+
+# Formatierung automatisch anwenden
+pnpm format
+```
 
 ## Wichtige Dateien
 
