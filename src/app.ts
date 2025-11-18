@@ -5,8 +5,7 @@
 import './styles.scss';
 import { MODALS } from './lib/types';
 import type { ModalKey } from './lib/types';
-import { initDialogEventsFor } from './lib/dialog-init';
-import { initOpeners } from './lib/dialog-init';
+import { initDialogEventsFor, initOpeners } from './lib/dialog-init';
 import { initPopstateSync, initDeepLink } from './lib/routing-init';
 import { initToolbarArrowNav } from './lib/accessibility';
 
@@ -15,10 +14,9 @@ function init(): void {
   initOpeners();
   initPopstateSync();
   initDeepLink();
-  const footerToolbar = document.querySelector('footer .contact[role="toolbar"]');
-  if (footerToolbar instanceof HTMLElement) {
-    initToolbarArrowNav(footerToolbar);
-  }
+  document
+    .querySelectorAll<HTMLElement>('[role="toolbar"]')
+    .forEach((toolbar) => initToolbarArrowNav(toolbar));
 }
 
 init();

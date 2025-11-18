@@ -261,14 +261,14 @@ Die Nginx-Konfiguration verwendet Port 80. Falls dieser belegt ist, kann die `co
 
 ## NPM Scripts
 
-| Script             | Beschreibung                                  |
-| ------------------ | --------------------------------------------- |
-| `pnpm dev`         | Startet Development Server                    |
-| `pnpm build`       | Erstellt Production Build                     |
-| `pnpm preview`     | Preview des Production Builds                 |
-| `pnpm lint`        | Führt ESLint, Stylelint und HTMLHint aus      |
-| `pnpm format`      | Formatiert alle Dateien mit Prettier          |
-| `pnpm format:check`| Prüft Formatierung ohne Änderungen vorzunehmen |
+| Script              | Beschreibung                                   |
+| ------------------- | ---------------------------------------------- |
+| `pnpm dev`          | Startet Development Server                     |
+| `pnpm build`        | Erstellt Production Build                      |
+| `pnpm preview`      | Preview des Production Builds                  |
+| `pnpm lint`         | Führt ESLint, Stylelint und HTMLHint aus       |
+| `pnpm format`       | Formatiert alle Dateien mit Prettier           |
+| `pnpm format:check` | Prüft Formatierung ohne Änderungen vorzunehmen |
 
 ### Linting & Formatting
 

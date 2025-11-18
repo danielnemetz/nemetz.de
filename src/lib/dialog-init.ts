@@ -8,7 +8,6 @@ import { getDialog } from './dialog';
 import { closeDialog, handleBackdropClick, openDialog } from './dialog-operations';
 import { setLanguage } from './language';
 import { renderModal } from './rendering';
-import { initToolbarArrowNav } from './accessibility';
 
 export function initOpeners(): void {
   document.querySelectorAll(`[${OPEN_ATTR}]`).forEach((el) => {
@@ -29,10 +28,7 @@ export function initDialogEventsFor(key: ModalKey): void {
   dlg.querySelectorAll('button[value="close"]').forEach((btn) => {
     btn.addEventListener('click', () => closeDialog({ updateUrl: true }));
   });
-  const toolbar = dlg.querySelector('.dialog-actions');
-  if (toolbar instanceof HTMLElement) {
-    initToolbarArrowNav(toolbar);
-  }
+  // Toolbar navigation is initialized globally in app.ts
   dlg.querySelectorAll('.lang-toggle').forEach((btn) => {
     btn.addEventListener('click', () => {
       const lang = btn.getAttribute('data-lang');
