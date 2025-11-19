@@ -27,13 +27,17 @@
   .lang-toggle {
     position: relative;
     font-size: 0.75em;
-    padding: 4px 10px;
-    min-width: 42px;
+    padding: 4px 4px;
+    min-width: 30px;
     border: none;
     background: transparent;
     color: var(--color-text-link);
     cursor: pointer;
     border-radius: 18px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     @include transition();
 
     font-weight: 500;
@@ -42,9 +46,10 @@
       position: relative;
       z-index: 2;
       display: block;
+      text-align: center;
     }
 
-    &[aria-pressed='true'] {
+    &[aria-current='page'] {
       color: #000;
       text-shadow: none;
 
@@ -60,7 +65,7 @@
       }
     }
 
-    &[aria-pressed='false'] {
+    &:not([aria-current='page']) {
       opacity: 0.6;
 
       &:hover {

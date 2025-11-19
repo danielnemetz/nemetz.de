@@ -2,7 +2,7 @@
 // Global State
 // ==========================================================================
 
-import type { ModalKey, Lang, LocaleDict } from './types';
+import type { ModalKey, Lang, LocaleDict } from './types.js';
 
 export let currentKey: ModalKey | null = null;
 export let lastFocused: HTMLElement | null = null;

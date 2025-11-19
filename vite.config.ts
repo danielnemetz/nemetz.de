@@ -58,6 +58,16 @@ function fixHtmlAfterBuild() {
 export default defineConfig({
   root: './src',
   publicDir: '../public',
+  server: {
+    host: 'localhost',
+    port: 5173,
+    hmr: {
+      protocol: 'ws',
+      host: 'localhost',
+      port: 5173,
+      clientPort: 5173,
+    },
+  },
   build: {
     outDir: '../dist',
     emptyOutDir: true,

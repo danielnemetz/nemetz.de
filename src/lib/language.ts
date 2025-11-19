@@ -4,13 +4,17 @@
 
 import type { Lang, SetLanguageOptions } from './types';
 import { currentKey, setCurrentLang } from './state';
-import { MODALS } from './types';
+import { buildLocalizedPath, getBasePathForKey, splitLocalizedPath } from './routing';
 
 export function getLangFromUrl(): Lang | null {
-  const params = new URLSearchParams(location.search);
-  const lang = params.get('lang');
-  if (lang === 'de' || lang === 'en') {
+  const { lang } = splitLocalizedPath(location.pathname);
+  if (lang) {
     return lang;
+  }
+  const params = new URLSearchParams(location.search);
+  const requested = params.get('lang');
+  if (requested === 'de' || requested === 'en') {
+    return requested;
   }
   return null;
 }
@@ -42,11 +46,14 @@ export function setLanguage(lang: Lang, options: SetLanguageOptions = {}): void 
   localStorage.setItem('lang', lang);
   // Update HTML lang attribute for accessibility (screen readers, browser features)
   document.documentElement.setAttribute('lang', lang);
-  if (syncUrl && currentKey) {
-    const def = MODALS[currentKey];
-    const url = new URL(location.href);
-    url.pathname = def.path;
-    url.searchParams.set('lang', lang);
-    history.replaceState({ modal: currentKey }, '', url.toString());
+  if (syncUrl) {
+    // Get current basePath from URL, even if it's invalid (for 404 pages)
+    const { basePath: currentBasePath } = splitLocalizedPath(location.pathname);
+    // Only use currentKey if it's valid, otherwise keep the current basePath
+    const basePath = currentKey ? getBasePathForKey(currentKey) : currentBasePath;
+    const target = buildLocalizedPath(lang, basePath);
+    if (location.pathname !== target) {
+      history.replaceState({ modal: currentKey }, '', target);
+    }
   }
 }

@@ -14,6 +14,8 @@ footer {
   padding: var(--font-size-base);
   line-break: auto;
   backdrop-filter: blur(var(--blur-backdrop));
+  position: relative;
+  z-index: 1;
 
   a {
     text-decoration: none;

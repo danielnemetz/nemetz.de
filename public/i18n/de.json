@@ -2,6 +2,12 @@
   "common": {
     "close": "Schließen"
   },
+  "notFound": {
+    "title": "404 | Fehlermeldung",
+    "error": "Die Seite konnte nicht gefunden werden",
+    "message": "Die Seite, die Sie suchen, existiert nicht.",
+    "backHome": "Zur Startseite"
+  },
   "main": {
     "subtitle": "Software Engineer aus Hamburg, Deutschland"
   },

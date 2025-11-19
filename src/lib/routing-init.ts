@@ -3,7 +3,7 @@
 // ==========================================================================
 
 import { currentKey, setCurrentKey } from './state';
-import { getKeyByPath } from './routing';
+import { getKeyByLocalizedPath } from './routing';
 import { showDialog, hideDialog } from './dialog';
 import { getLangFromUrl } from './language';
 import { setLanguage } from './language';
@@ -12,15 +12,15 @@ import { renderModal, renderPage } from './rendering';
 
 export function initPopstateSync(): void {
   window.addEventListener('popstate', () => {
-    const key = getKeyByPath(location.pathname);
+    const key = getKeyByLocalizedPath(location.pathname);
+    const lang = getLangFromUrl();
+    if (lang) {
+      setLanguage(lang, { syncUrl: false });
+      void renderPage();
+    }
     if (key) {
       setCurrentKey(key);
       showDialog(key);
-      const lang = getLangFromUrl();
-      if (lang) {
-        setLanguage(lang, { syncUrl: false });
-        void renderPage();
-      }
       void renderModal(key);
     } else if (currentKey) {
       hideDialog(currentKey);
@@ -30,8 +30,9 @@ export function initPopstateSync(): void {
 }
 
 export function initDeepLink(): void {
-  const key = getKeyByPath(location.pathname);
-  const urlLang = getLangFromUrl();
+  const initialState = window.__INITIAL_STATE__;
+  const key = initialState?.dialog ?? getKeyByLocalizedPath(location.pathname);
+  const urlLang = initialState?.lang ?? getLangFromUrl();
   if (urlLang) {
     setLanguage(urlLang, { syncUrl: false });
   } else {
@@ -46,5 +47,8 @@ export function initDeepLink(): void {
     setCurrentKey(key);
     showDialog(key);
     void renderModal(key);
+  }
+  if (initialState) {
+    window.__INITIAL_STATE__ = undefined;
   }
 }

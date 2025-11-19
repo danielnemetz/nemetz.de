@@ -2,6 +2,12 @@
   "common": {
     "close": "Close"
   },
+  "notFound": {
+    "title": "404 | Error",
+    "error": "Page not found",
+    "message": "The page you are looking for does not exist.",
+    "backHome": "Back to home"
+  },
   "main": {
     "subtitle": "Software Engineer based in Hamburg, Germany"
   },

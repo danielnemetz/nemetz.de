@@ -22,9 +22,10 @@ function init(): void {
     .forEach((toolbar) => initToolbarArrowNav(toolbar));
 
   // Initialize global language selector
-  document.querySelectorAll('.lang-toggle').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const lang = btn.getAttribute('data-lang');
+  document.querySelectorAll<HTMLAnchorElement>('.lang-toggle').forEach((link) => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const lang = link.getAttribute('data-lang');
       if (lang === 'de' || lang === 'en') {
         setLanguage(lang, { syncUrl: true });
         void renderPage();

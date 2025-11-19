@@ -1,13 +1,21 @@
 # Production stage
-FROM nginx:alpine
+FROM node:20-alpine
 
-# Copy nginx configuration
-COPY nginx/default.conf /etc/nginx/conf.d/default.conf
+WORKDIR /app
 
-# Copy built files from host (if dist/ exists, use it; otherwise build)
-COPY dist /usr/share/nginx/html
+# Copy package files
+COPY package.json pnpm-lock.yaml ./
+RUN corepack enable && corepack prepare pnpm@latest --activate && pnpm install --frozen-lockfile --prod
 
-EXPOSE 80
+# Copy built files (already built locally)
+COPY dist-server ./dist-server
+COPY dist ./dist
 
-CMD ["nginx", "-g", "daemon off;"]
+EXPOSE 3000
+
+ENV NODE_ENV=production
+ENV PORT=3000
+ENV HOST=0.0.0.0
+
+CMD ["node", "dist-server/server/server.js"]
 

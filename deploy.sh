@@ -11,10 +11,12 @@ echo "=== Copying files to server ==="
 rsync -avz --delete \
   --include='dist/' \
   --include='dist/**' \
+  --include='dist-server/' \
+  --include='dist-server/**' \
+  --include='package.json' \
+  --include='pnpm-lock.yaml' \
   --include='Dockerfile' \
   --include='compose.yml' \
-  --include='nginx/' \
-  --include='nginx/**' \
   --exclude='*' \
   ./ web:~/nemetz.de/
 

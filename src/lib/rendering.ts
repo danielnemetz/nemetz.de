@@ -6,11 +6,12 @@ import type { ModalKey } from './types';
 import { currentLang } from './state';
 import { getDialog } from './dialog';
 import { loadLocale } from './i18n';
+import { getTranslationValue } from './i18n-utils';
 
 export function updateLangToggles(container: HTMLElement | Document = document): void {
   container.querySelectorAll('.lang-toggle').forEach((b) => {
     const lang = b.getAttribute('data-lang');
-    b.setAttribute('aria-pressed', String(lang === currentLang));
+    b.setAttribute('aria-current', lang === currentLang ? 'page' : 'false');
   });
 }
 
@@ -19,19 +20,14 @@ function translateElement(el: HTMLElement, dict: Record<string, unknown>): void 
   if (!path) {
     return;
   }
-  const parts = path.split('.');
-  let node: unknown = dict;
-  for (const p of parts) {
-    if (node && typeof node === 'object' && !Array.isArray(node)) {
-      node = (node as Record<string, unknown>)[p];
-    }
+  const value = getTranslationValue(dict, path);
+  if (!value) {
+    return;
   }
-  if (typeof node === 'string') {
-    if (node.includes('<')) {
-      el.innerHTML = node;
-    } else {
-      el.textContent = node;
-    }
+  if (value.includes('<')) {
+    el.innerHTML = value;
+  } else {
+    el.textContent = value;
   }
 }
 
