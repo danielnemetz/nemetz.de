@@ -6,11 +6,11 @@ export let lastFocused = null;
 export let currentLang = 'en';
 export const localeCache = {};
 export function setCurrentKey(key) {
-    currentKey = key;
+  currentKey = key;
 }
 export function setLastFocused(element) {
-    lastFocused = element;
+  lastFocused = element;
 }
 export function setCurrentLang(lang) {
-    currentLang = lang;
+  currentLang = lang;
 }

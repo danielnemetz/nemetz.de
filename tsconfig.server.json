@@ -1,28 +1,23 @@
 {
-    "compilerOptions": {
-        "target": "ES2020",
-        "module": "ESNext",
-        "moduleResolution": "node",
-        "lib": [
-            "ES2020",
-            "DOM"
-        ],
-        "types": [
-            "node"
-        ],
-        "esModuleInterop": true,
-        "strict": true,
-        "skipLibCheck": true,
-        "forceConsistentCasingInFileNames": true,
-        "resolveJsonModule": true,
-        "outDir": "dist-server",
-        "rootDir": "."
-    },
-    "include": [
-        "server/**/*.ts",
-        "src/lib/types.ts",
-        "src/lib/i18n-utils.ts",
-        "src/lib/routing.ts",
-        "src/lib/state.ts"
-    ]
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "lib": ["ES2020", "DOM"],
+    "types": ["node"],
+    "esModuleInterop": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "outDir": "dist-server",
+    "rootDir": "."
+  },
+  "include": [
+    "server/**/*.ts",
+    "src/lib/types.ts",
+    "src/lib/i18n-utils.ts",
+    "src/lib/routing.ts",
+    "src/lib/state.ts"
+  ]
 }

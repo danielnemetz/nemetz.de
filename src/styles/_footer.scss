@@ -26,18 +26,18 @@ footer {
     }
   }
 
-  >.empty,
-  >.icons {
+  > .empty,
+  > .icons {
     flex: 0 0 var(--size-icon-empty);
     display: flex;
     align-items: flex-end;
   }
 
-  >.empty {
+  > .empty {
     visibility: hidden;
   }
 
-  >.icons {
+  > .icons {
     justify-content: flex-end;
     align-items: center;
   }
@@ -99,7 +99,7 @@ footer {
   }
 
   .icons {
-    >a {
+    > a {
       display: inline-flex;
       width: var(--size-icon-empty);
       height: var(--size-icon-empty);

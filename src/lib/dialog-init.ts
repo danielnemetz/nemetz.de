@@ -26,7 +26,7 @@ export function initDialogEventsFor(key: ModalKey): void {
   dlg.querySelectorAll('button[value="close"]').forEach((btn) => {
     btn.addEventListener('click', () => closeDialog({ updateUrl: true }));
   });
-  
+
   // Handle manual backdrop element for server-side rendered dialogs
   const backdrop = document.querySelector(`.dialog-backdrop[data-backdrop-for="${dlg.id}"]`);
   if (backdrop) {

@@ -18,7 +18,9 @@ export function showDialog(key: ModalKey): void {
   if (dlg && !dlg.open) {
     dlg.showModal();
     // Remove manual backdrop if it exists (server-side rendered)
-    const manualBackdrop = document.querySelector(`.dialog-backdrop[data-backdrop-for="${dlg.id}"]`);
+    const manualBackdrop = document.querySelector(
+      `.dialog-backdrop[data-backdrop-for="${dlg.id}"]`,
+    );
     if (manualBackdrop) {
       manualBackdrop.remove();
     }
@@ -30,7 +32,9 @@ export function hideDialog(key: ModalKey): void {
   if (dlg && dlg.open) {
     dlg.close();
     // Remove manual backdrop if it exists
-    const manualBackdrop = document.querySelector(`.dialog-backdrop[data-backdrop-for="${dlg.id}"]`);
+    const manualBackdrop = document.querySelector(
+      `.dialog-backdrop[data-backdrop-for="${dlg.id}"]`,
+    );
     if (manualBackdrop) {
       manualBackdrop.remove();
     }
