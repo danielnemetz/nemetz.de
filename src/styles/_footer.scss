@@ -5,37 +5,49 @@
 
 footer {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: var(--spacing-sm);
+  align-items: stretch;
+  gap: var(--spacing-md);
   background-color: var(--color-bg-footer);
   text-align: center;
   padding: var(--font-size-base);
   line-break: auto;
   backdrop-filter: blur(var(--blur-backdrop));
 
-  .empty {
-    width: var(--size-icon-empty);
+  a {
+    text-decoration: none;
+    transition: color 0.2s;
+
+    &:hover {
+      color: var(--color-text-link-hover);
+    }
+  }
+
+  >.empty,
+  >.icons {
+    flex: 0 0 var(--size-icon-empty);
+    display: flex;
+    align-items: flex-end;
+  }
+
+  >.empty {
+    visibility: hidden;
+  }
+
+  >.icons {
+    justify-content: flex-end;
   }
 
   .footer-content {
-    flex: 1;
+    flex: 1 1 auto;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: var(--spacing-md);
-    flex-wrap: wrap;
-  }
-
-  .contact {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-xs);
     flex-wrap: wrap;
     justify-content: center;
+    align-items: center;
+    column-gap: var(--spacing-md);
+    row-gap: var(--spacing-sm);
   }
 
-  .footer-divider {
+  .divider {
     width: 1px;
     height: 1.2em;
     background-color: var(--color-text-separator);
@@ -43,13 +55,16 @@ footer {
     flex-shrink: 0;
   }
 
+  .contact,
   .legal {
     display: flex;
     align-items: center;
     gap: var(--spacing-xs);
     flex-wrap: wrap;
     justify-content: center;
+  }
 
+  .legal {
     .copyright {
       color: var(--color-text-separator);
       font-size: 0.9em;
@@ -69,14 +84,14 @@ footer {
   }
 
   .icons {
-    width: var(--size-icon-empty);
-
-    > a {
-      display: inline-block;
+    >a {
+      display: inline-flex;
       width: var(--size-icon-empty);
       height: var(--size-icon-empty);
       border-radius: var(--border-radius-circle);
       position: relative;
+      justify-content: flex-end;
+      align-items: flex-end;
 
       &:focus-visible {
         outline: none;
