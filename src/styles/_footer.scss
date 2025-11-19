@@ -4,6 +4,8 @@
 @use 'mixins' as *;
 
 footer {
+  --touch-target-size: 44px;
+
   display: flex;
   align-items: stretch;
   gap: var(--spacing-md);
@@ -35,6 +37,7 @@ footer {
 
   > .icons {
     justify-content: flex-end;
+    align-items: center;
   }
 
   .footer-content {
@@ -63,6 +66,17 @@ footer {
     justify-content: center;
   }
 
+  .contact a,
+  .legal a {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--touch-target-size);
+    padding: 0.25rem calc(var(--spacing-xs) * 1.5);
+    border-radius: 0.5rem;
+  }
+
   .legal {
     .copyright {
       color: var(--color-text-separator);
@@ -87,8 +101,8 @@ footer {
       height: var(--size-icon-empty);
       border-radius: var(--border-radius-circle);
       position: relative;
-      justify-content: flex-end;
-      align-items: flex-end;
+      justify-content: center;
+      align-items: center;
 
       &:focus-visible {
         outline: none;
@@ -131,4 +145,7 @@ footer {
 
 .separator {
   color: var(--color-text-separator);
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--touch-target-size);
 }
