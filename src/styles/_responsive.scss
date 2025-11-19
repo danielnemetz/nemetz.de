@@ -4,8 +4,7 @@
 @media (max-width: 900px) {
   footer {
     .footer-content {
-      column-gap: var(--spacing-sm);
-      row-gap: var(--spacing-sm);
+      gap: var(--spacing-sm);
     }
 
     .contact,
@@ -33,16 +32,15 @@
       padding: 0 var(--spacing-sm);
     }
 
-    >h1 {
+    > h1 {
       font-size: var(--font-size-heading);
       text-align: center;
     }
   }
 
   footer {
-
-    >.empty,
-    >.icons {
+    > .empty,
+    > .icons {
       flex: 0 0 var(--size-icon-empty);
     }
 
@@ -51,8 +49,7 @@
     }
 
     .footer-content {
-      column-gap: var(--spacing-sm);
-      row-gap: var(--spacing-sm);
+      gap: var(--spacing-sm);
     }
 
     .contact {

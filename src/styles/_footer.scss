@@ -22,18 +22,18 @@ footer {
     }
   }
 
-  >.empty,
-  >.icons {
+  > .empty,
+  > .icons {
     flex: 0 0 var(--size-icon-empty);
     display: flex;
     align-items: flex-end;
   }
 
-  >.empty {
+  > .empty {
     visibility: hidden;
   }
 
-  >.icons {
+  > .icons {
     justify-content: flex-end;
   }
 
@@ -43,8 +43,7 @@ footer {
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    column-gap: var(--spacing-md);
-    row-gap: var(--spacing-sm);
+    gap: var(--spacing-sm) var(--spacing-md);
   }
 
   .divider {
@@ -82,7 +81,7 @@ footer {
   }
 
   .icons {
-    >a {
+    > a {
       display: inline-flex;
       width: var(--size-icon-empty);
       height: var(--size-icon-empty);
