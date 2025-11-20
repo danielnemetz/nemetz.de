@@ -105,37 +105,38 @@
     </dialog>
     <% if (!it.is404) { %>
     <footer>
+      <div class="empty"></div>
       <div class="footer-content">
-        <div class="contact">
-          <span data-i18n="footer.name"><%= it.t('footer.name') %></span>
-          <span class="separator">·</span>
-          <a href="mailto:daniel@nemetz.de" data-i18n="footer.email"><%= it.t('footer.email') %></a>
-          <span class="separator">·</span>
-          <a href="tel:+494041366419"><%= it.t('footer.phone') %></a>
+        <div class="contact" role="toolbar" aria-label="Footer contact">
+          <a href="/about" data-open-dialog="about" aria-label="About Daniel Nemetz">Daniel Nemetz</a>
+          <span class="separator">&middot;</span>
+          <a href="mailto:daniel@nemetz.de">daniel@nemetz.de</a>
+          <span class="separator">&middot;</span>
+          <a href="tel:+494041366419">+49&nbsp;40&nbsp;413&nbsp;66&nbsp;419</a>
         </div>
         <div class="divider"></div>
         <div class="legal" role="toolbar" aria-label="Footer legal">
           <span class="build-id" data-build-id-text title="Build <%= it.buildId %>"><%= it.buildId %></span>
-          <span class="separator">·</span>
+          <span class="separator">&middot;</span>
           <span class="copyright">2025</span>
-          <span class="separator">·</span>
-          <a href="/imprint" data-open-dialog="imprint" data-i18n="footer.imprint"
-            ><%= it.t('footer.imprint') %></a
-          >
-          <span class="separator">·</span>
-          <a href="/privacy" data-open-dialog="privacy" data-i18n="footer.privacy"
-            ><%= it.t('footer.privacy') %></a
-          >
+          <span class="separator">&middot;</span>
+          <a href="/imprint" data-open-dialog="imprint" data-i18n="imprint.title"><%= it.t('imprint.title') %></a>
+          <span class="separator">&middot;</span>
+          <a href="/privacy" data-open-dialog="privacy" data-i18n="privacy.title"><%= it.t('privacy.title') %></a>
         </div>
       </div>
-      <a
-        href="https://www.linkedin.com/in/daniel-nemetz-a4b2b6a4/"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="linkedin"
-        aria-label="LinkedIn Profile"
-        ><img src="/images/linkedin.svg" alt="LinkedIn"
-      /></a>
+      <div class="icons">
+        <a
+          href="https://linkedin.com/in/daniel-nemetz"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="LinkedIn"
+        >
+          <div class="icon">
+            <img src="/images/linkedin.svg" alt="LinkedIn" />
+          </div>
+        </a>
+      </div>
     </footer>
     <% } %>
     <% if (it.initialDialog) { %>
