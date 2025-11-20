@@ -54,6 +54,7 @@ jobs:
           timeout: 120s
           script: |
             cd ~/nemetz.de
+            export BUILD_ID=${{ github.sha }}
             docker compose down
             docker image rm nemetzde-web || true
             docker compose build --no-cache

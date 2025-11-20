@@ -18,6 +18,7 @@
     "src/lib/types.ts",
     "src/lib/i18n-utils.ts",
     "src/lib/routing.ts",
-    "src/lib/state.ts"
+    "src/lib/state.ts",
+    "types/**/*.d.ts"
   ]
 }

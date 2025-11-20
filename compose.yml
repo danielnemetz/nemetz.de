@@ -5,6 +5,8 @@ services:
       dockerfile: Dockerfile
     container_name: nemetz-de-web
     restart: unless-stopped
+    environment:
+      - BUILD_ID=${BUILD_ID:-local-dev}
     networks:
       - traefik-network
     labels:

@@ -66,7 +66,7 @@ async function loadTemplateString(): Promise<string> {
   htmlElement.setAttribute('lang', '<%= it.lang %>');
   htmlElement.setAttribute('data-build-id', '<%= it.buildId %>');
 
-  document.querySelectorAll<HTMLElement>('[data-i18n]').forEach((el) => {
+  document.querySelectorAll<HTMLElement>('[data-i18n]').forEach((el: HTMLElement) => {
     const key = el.getAttribute('data-i18n');
     if (!key) {
       return;
@@ -80,7 +80,7 @@ async function loadTemplateString(): Promise<string> {
     }
   });
 
-  document.querySelectorAll<HTMLElement>('.lang-toggle').forEach((link) => {
+  document.querySelectorAll<HTMLElement>('.lang-toggle').forEach((link: HTMLElement) => {
     const lang = link.getAttribute('data-lang');
     if (isLang(lang)) {
       link.setAttribute('href', `<%= it.langPathFor(${JSON.stringify(lang)}, it.initialDialog) %>`);
@@ -91,7 +91,7 @@ async function loadTemplateString(): Promise<string> {
     }
   });
 
-  document.querySelectorAll<HTMLElement>('[data-open-dialog]').forEach((el) => {
+  document.querySelectorAll<HTMLElement>('[data-open-dialog]').forEach((el: HTMLElement) => {
     const key = el.getAttribute('data-open-dialog');
     if (isModalKey(key)) {
       el.setAttribute('href', `<%= it.pathFor(${JSON.stringify(key)}) %>`);
@@ -113,7 +113,7 @@ async function loadTemplateString(): Promise<string> {
     buildInfo.setAttribute('data-tooltip', 'Build <%= it.buildId %>');
   }
 
-  document.querySelectorAll<HTMLElement>('[data-build-id]').forEach((el) => {
+  document.querySelectorAll<HTMLElement>('[data-build-id-text]').forEach((el: HTMLElement) => {
     el.textContent = '<%= it.buildId %>';
     el.setAttribute('title', `Build <%= it.buildId %>`);
   });
@@ -138,7 +138,7 @@ async function loadTemplateString(): Promise<string> {
   let template = document.toString();
   template = template.replace(
     / data-open-placeholder="(about|imprint|privacy)"/g,
-    (_match, key: string) => {
+    (_match: string, key: string) => {
       const def = MODALS[key as ModalKey];
       if (!def) {
         return '';
@@ -274,8 +274,13 @@ async function render404Page(lang: Lang): Promise<string> {
     buildInfo.setAttribute('data-tooltip', `Build ${buildId}`);
   }
 
+  document.querySelectorAll<HTMLElement>('[data-build-id-text]').forEach((el: HTMLElement) => {
+    el.textContent = buildId;
+    el.setAttribute('title', `Build ${buildId}`);
+  });
+
   // Update language toggles
-  document.querySelectorAll<HTMLElement>('.lang-toggle').forEach((link) => {
+  document.querySelectorAll<HTMLElement>('.lang-toggle').forEach((link: HTMLElement) => {
     const linkLang = link.getAttribute('data-lang');
     if (isLang(linkLang)) {
       link.setAttribute('href', `<%= it.langPathFor(${JSON.stringify(linkLang)}, null) %>`);
@@ -384,7 +389,7 @@ async function start(): Promise<void> {
       const target = `${viteDevServer}${assetPath}${originalUrl.search}`;
       const res = await fetch(target);
       reply.status(res.status);
-      res.headers.forEach((value, key) => reply.header(key, value));
+      res.headers.forEach((value: string, headerKey: string) => reply.header(headerKey, value));
       return reply.send(res.body);
     });
 

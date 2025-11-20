@@ -23,6 +23,7 @@ rsync -avz --delete \
 
 echo "=== Deploying on server ==="
 ssh -J sec web "cd ~/nemetz.de && \
+  export BUILD_ID=$BUILD_ID && \
   docker compose down && \
   docker compose build --no-cache && \
   docker compose up -d && \
