@@ -182,37 +182,10 @@ async function renderPage({
   return rendered;
 }
 
-async function render404Page(lang: Lang): Promise<string> {
-  const template = await getTemplate();
-  const locale = await loadLocale(lang);
-  const fallback = lang === DEFAULT_LANG ? locale : await loadLocale(DEFAULT_LANG);
-
-  if (!isDev && !manifest) {
-    await loadManifest();
-  }
-
-  const translator = (key: string): string =>
-    getTranslationValue(locale, key) ?? getTranslationValue(fallback, key) ?? '';
-
-  const context: TemplateContext & { is404: boolean } = {
-    lang,
-    initialDialog: null,
-    t: translator,
-    pathFor: (key) => buildLocalizedPath(lang, getBasePathForKey(key)),
-    langPathFor: (targetLang, key) => buildLocalizedPath(targetLang, getBasePathForKey(key)),
-    initialStateJson: JSON.stringify({
-      lang,
-      dialog: null,
-      path: buildLocalizedPath(lang, '/'),
-    }),
-    MODALS,
-    buildId: getBuildId(),
-    assets: getAssets(),
-    isDev,
-    is404: true,
-  };
-
-  return eta.renderString(template, context);
+async function render404Page(_lang: Lang): Promise<string> {
+  // Serve the static 404.html file
+  const html404Path = isDev ? 'public/404.html' : 'dist/404.html';
+  return fsSync.readFileSync(html404Path, 'utf-8');
 }
 
 // Normalize incoming path to {lang, basePath} and detect redirects
