@@ -11,6 +11,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Set build metadata
+        run: echo "BUILD_ID=${GITHUB_SHA::7}" >> $GITHUB_ENV
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
         with:
@@ -20,8 +23,6 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build
-        env:
-          BUILD_ID: ${{ github.sha }}
         run: pnpm build
 
       - name: Copy files to server
@@ -52,9 +53,10 @@ jobs:
           proxy_key: ${{ secrets.SERVER_SSH_KEY }}
           proxy_port: ${{ secrets.BASTION_PORT || 22 }}
           timeout: 120s
+          envs: BUILD_ID
           script: |
             cd ~/nemetz.de
-            export BUILD_ID=${{ github.sha }}
+            export BUILD_ID=$BUILD_ID
             docker compose down
             docker image rm nemetzde-web || true
             docker compose build --no-cache
