@@ -32,6 +32,7 @@ const localeDir = path.join(
 );
 const viteDevServer = process.env.VITE_DEV_SERVER ?? 'http://localhost:5173';
 
+// Single Eta instance – auto-escape HTML and cache templates in production
 const eta = new Eta({ autoEscape: true, cache: !isDev });
 
 type TemplateContext = {
@@ -56,6 +57,7 @@ function isModalKey(value: string | null): value is ModalKey {
 }
 
 async function loadTemplateString(): Promise<string> {
+  // Base HTML comes from src/index.html in dev or dist/index.html in prod
   const html = await fs.readFile(templateFile, 'utf8');
   const { document } = parseHTML(html);
   const htmlElement = document.documentElement;
@@ -122,7 +124,7 @@ async function loadTemplateString(): Promise<string> {
     },
   );
 
-  // Add backdrop element before body closing tag if dialog is open
+  // Manual backdrop before closing body (needed for SSR open dialogs)
   template = template.replace(
     /<\/body>/,
     `<% if (it.initialDialog) { %><div class="dialog-backdrop" data-backdrop-for="<%= it.MODALS[it.initialDialog].id %>"></div><% } %>\n    </body>`,
@@ -204,7 +206,7 @@ async function render404Page(lang: Lang): Promise<string> {
   const translator = (key: string): string =>
     getTranslationValue(locale, key) ?? getTranslationValue(fallback, key) ?? '';
 
-  // Parse template and replace main content with 404 content
+  // Reuse base template and replace main area with minimal 404 content
   const { document } = parseHTML(await fs.readFile(templateFile, 'utf-8'));
 
   // Replace main content
@@ -275,6 +277,7 @@ async function render404Page(lang: Lang): Promise<string> {
   return await rendered;
 }
 
+// Normalize incoming path to {lang, basePath} and detect redirects
 function determineLang(
   pathname: string,
   searchParams: URLSearchParams,
@@ -294,7 +297,7 @@ function determineLang(
 }
 
 async function start(): Promise<void> {
-  const fastify = Fastify({ logger: true });
+  const fastify = Fastify({ logger: true }); // Main HTTP server
   const wsProxy = httpProxy.createProxyServer({
     target: viteDevServer.replace('http', 'ws'),
     ws: true,
@@ -303,6 +306,7 @@ async function start(): Promise<void> {
   wsProxy.on('error', (err) => fastify.log.error({ err }, 'WS proxy error'));
 
   if (isDev) {
+    // Proxy Vite-internal routes during dev (HMR, source files, etc.)
     const proxyPrefixes = ['/@vite', '/@fs', '/@id', '/@react-refresh', '/src', '/node_modules'];
     for (const prefix of proxyPrefixes) {
       fastify.register(fastifyProxy, {
@@ -324,6 +328,7 @@ async function start(): Promise<void> {
       });
     }
 
+    // Allow localized asset URLs like /de/assets/... by stripping the prefix
     fastify.get('/:lang/*', async (request, reply) => {
       const params = request.params as { lang?: string };
       const lang = params.lang;
@@ -381,6 +386,7 @@ async function start(): Promise<void> {
       });
     }
 
+    // Serve top-level files (robots, manifest, etc.) directly
     const singleFiles = ['robots.txt', 'favicon.ico', 'apple-touch-icon.png', 'site.webmanifest'];
     for (const fileName of singleFiles) {
       const fullPath = path.join(distDir, fileName);

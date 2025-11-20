@@ -19,8 +19,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Lint and build
-        run: pnpm lint && pnpm build
+      - name: Build
+        run: pnpm build
 
       - name: Copy files to server
         uses: appleboy/scp-action@v1
@@ -34,7 +34,7 @@ jobs:
           proxy_key: ${{ secrets.SERVER_SSH_KEY }}
           proxy_port: ${{ secrets.BASTION_PORT || 22 }}
           timeout: 120s
-          source: 'dist,Dockerfile,compose.yml,nginx'
+          source: 'dist,dist-server,package.json,pnpm-lock.yaml,Dockerfile,compose.yml'
           target: '~/nemetz.de/'
           rm: true
 

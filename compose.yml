@@ -11,7 +11,7 @@ services:
       - 'traefik.enable=true'
 
       # HTTPS Router - valid routes and static assets (higher priority)
-      - 'traefik.http.routers.nemetz-de.rule=Host(`nemetz.de`) && (PathPrefix(`/de`) || PathPrefix(`/en`) || PathPrefix(`/assets`) || PathPrefix(`/images`) || PathPrefix(`/fonts`) || PathPrefix(`/favicons`) || PathPrefix(`/i18n`) || Path(`/index.html`) || Path(`/404.html`))'
+      - 'traefik.http.routers.nemetz-de.rule=Host(`nemetz.de`) && (Path(`/`) || PathPrefix(`/de`) || PathPrefix(`/en`) || PathPrefix(`/assets`) || PathPrefix(`/images`) || PathPrefix(`/fonts`) || PathPrefix(`/favicons`) || PathPrefix(`/i18n`) || Path(`/index.html`) || Path(`/404.html`))'
       - 'traefik.http.routers.nemetz-de.entrypoints=websecure'
       - 'traefik.http.routers.nemetz-de.tls.certresolver=cloudflare'
       - 'traefik.http.routers.nemetz-de.middlewares=headers-nemetz-de'
@@ -27,7 +27,7 @@ services:
       - 'traefik.http.routers.nemetz-de-404.priority=1'
 
       # HTTP Router - valid routes and static assets (higher priority)
-      - 'traefik.http.routers.nemetz-de-web.rule=Host(`nemetz.de`) && (PathPrefix(`/de`) || PathPrefix(`/en`) || PathPrefix(`/assets`) || PathPrefix(`/images`) || PathPrefix(`/fonts`) || PathPrefix(`/favicons`) || PathPrefix(`/i18n`) || Path(`/index.html`) || Path(`/404.html`))'
+      - 'traefik.http.routers.nemetz-de-web.rule=Host(`nemetz.de`) && (Path(`/`) || PathPrefix(`/de`) || PathPrefix(`/en`) || PathPrefix(`/assets`) || PathPrefix(`/images`) || PathPrefix(`/fonts`) || PathPrefix(`/favicons`) || PathPrefix(`/i18n`) || Path(`/index.html`) || Path(`/404.html`))'
       - 'traefik.http.routers.nemetz-de-web.entrypoints=web'
       - 'traefik.http.routers.nemetz-de-web.service=nemetz-de'
       - 'traefik.http.routers.nemetz-de-web.priority=10'

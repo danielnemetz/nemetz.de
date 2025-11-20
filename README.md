@@ -13,7 +13,6 @@ nemetz.de/
 │   ├── index.html          # HTML Template
 │   └── styles.scss         # Haupt-Stylesheet (importiert alle Module)
 ├── public/                 # Statische Assets (fonts, images, i18n, favicons)
-├── nginx/                  # Nginx-Konfiguration
 ├── dist/                   # Build-Output (wird beim Build erstellt)
 ├── Dockerfile              # Multi-Stage Docker Build
 ├── compose.yml             # Docker Compose Konfiguration
@@ -86,36 +85,19 @@ docker compose logs -f
 
 ## Deployment
 
-### 1. Dateien auf Server kopieren
+### GitHub Actions
+
+Jeder Push auf `main` triggert das Workflow `deploy.yml`. Die Action führt `pnpm build` aus, kopiert die Artefakte (`dist/`, `dist-server/`, `package.json`, `pnpm-lock.yaml`, `Dockerfile`, `compose.yml`) auf den Server und startet dort `docker compose build && docker compose up -d`.
+
+### Manuell
 
 ```bash
-rsync -avz --delete \
-  --include='Dockerfile' \
-  --include='compose.yml' \
-  --include='package.json' \
-  --include='pnpm-lock.yaml' \
-  --include='vite.config.ts' \
-  --include='tsconfig.json' \
-  --include='tsconfig.node.json' \
-  --include='.dockerignore' \
-  --include='src/' \
-  --include='src/**' \
-  --include='public/' \
-  --include='public/**' \
-  --include='nginx/' \
-  --include='nginx/**' \
-  --exclude='*' \
-  ./ web:~/nemetz.de/
+./deploy.sh
 ```
 
-### 2. Auf dem Server
+Das Skript führt lokal `pnpm build` aus, synchronisiert dieselben Artefakte auf den Server und startet anschließend den Container (analog zur CI).
 
-```bash
-cd ~/nemetz.de
-docker compose up -d --build
-```
-
-### 3. Status prüfen
+### Status prüfen (Server)
 
 ```bash
 # Container-Status
@@ -177,20 +159,16 @@ docker compose logs -f
 
 ## Build-Prozess
 
-Der Build-Prozess läuft in zwei Stufen:
+1. **pnpm build**
+   - TypeScript-Transpile (Frontend + Shared)
+   - Vite Build → `dist/`
+   - Server-Build über `tsc -p tsconfig.server.json` → `dist-server/`
 
-1. **Builder-Stage** (Node.js Container):
-   - Installiert Dependencies via `pnpm install --frozen-lockfile`
-   - Führt `pnpm build` aus:
-     - TypeScript → JavaScript (mit Strict Mode)
-     - SASS → CSS
-     - Assets werden optimiert
-   - Output wird in `dist/` erstellt
-
-2. **Production-Stage** (Nginx Container):
-   - Kopiert nur `dist/` aus Builder-Stage
-   - Kopiert Nginx-Konfiguration
-   - Startet Nginx
+2. **Docker Image**
+   - Basis: `node:20-alpine`
+   - Kopiert `dist/`, `dist-server/`, `package.json`, `pnpm-lock.yaml`
+   - `pnpm install --prod`
+   - Startet Fastify-Server (`node dist-server/server/server.js`)
 
 ## Konfiguration
 
@@ -198,20 +176,9 @@ Der Build-Prozess läuft in zwei Stufen:
 
 Die `compose.yml` konfiguriert:
 
-- Multi-Stage Build
+- Node-Container mit Fastify
 - Traefik-Integration (Labels)
 - Netzwerk: `traefik-network` (extern)
-
-### Nginx
-
-Die Nginx-Konfiguration (`nginx/default.conf`) bietet:
-
-- Gzip-Kompression
-- Optimierte Cache-Strategie:
-  - HTML: `no-cache` (wird immer neu geladen für Cache-Busting)
-  - Gehashte Assets (`/assets/*-[hash].js|css`): 1 Jahr Cache (Hash sorgt für Cache-Busting)
-  - Andere Assets (Bilder, Fonts): 30 Tage Cache
-- SPA-Routing (try_files)
 
 ### Vite
 
