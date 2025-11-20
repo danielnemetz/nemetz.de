@@ -244,10 +244,6 @@ async function start(): Promise<void> {
   });
   wsProxy.on('error', (err) => fastify.log.error({ err }, 'WS proxy error'));
 
-
-
-
-
   if (isDev) {
     // Proxy Vite-internal routes during dev (HMR, source files, etc.)
     const proxyPrefixes = ['/@vite', '/@fs', '/@id', '/@react-refresh', '/src', '/node_modules'];

@@ -45,7 +45,7 @@ export default defineConfig({
       ext: '.gz',
       deleteOriginFile: false,
     }),
-    // Generate .br files  
+    // Generate .br files
     viteCompression({
       algorithm: 'brotliCompress',
       ext: '.br',

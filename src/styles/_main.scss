@@ -40,10 +40,10 @@ main {
     }
   }
 
-  >h1 {
+  > h1 {
     font-size: var(--font-size-heading);
 
-    >a {
+    > a {
       color: var(--color-text);
     }
   }
@@ -53,7 +53,7 @@ main {
   }
 
   &.error {
-    >* {
+    > * {
       text-transform: uppercase;
     }
   }

@@ -5,4 +5,3 @@ declare module 'linkedom' {
 
   export function parseHTML(html: string): ParsedHTML;
 }
-
