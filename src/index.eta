@@ -22,7 +22,7 @@
     <% } %>
   </head>
 
-  <body>
+  <body<% if (it.is404) { %> class="error-page"<% } %>>
     <div class="lang-selector" role="toolbar" aria-label="Language">
       <a href="/de" class="lang-toggle" data-lang="de" aria-current="false" aria-label="Deutsch">
         <span class="lang-option">DE</span>
