@@ -113,6 +113,11 @@ async function loadTemplateString(): Promise<string> {
     buildInfo.setAttribute('data-tooltip', 'Build <%= it.buildId %>');
   }
 
+  document.querySelectorAll<HTMLElement>('[data-build-id]').forEach((el) => {
+    el.textContent = '<%= it.buildId %>';
+    el.setAttribute('title', `Build <%= it.buildId %>`);
+  });
+
   Object.entries(MODALS).forEach(([key, def]) => {
     const node = document.getElementById(def.id);
     if (node) {
