@@ -31,7 +31,12 @@
         <span class="lang-option">EN</span>
       </a>
     </div>
-    <main>
+    <main<% if (it.is404) { %> class="error"<% } %>>
+      <% if (it.is404) { %>
+      <h1 data-i18n="notFound.error"><%= it.t('notFound.error') %></h1>
+      <p data-i18n="notFound.message"><%= it.t('notFound.message') %></p>
+      <a href="<%= it.langPathFor(it.lang, null) %>" class="btn" data-i18n="notFound.backHome"><%= it.t('notFound.backHome') %></a>
+      <% } else { %>
       <a
         href="/about"
         class="me"
@@ -41,6 +46,7 @@
       ></a>
       <h1><a href="/about" data-open-dialog="about">Daniel Nemetz</a></h1>
       <p data-i18n="main.subtitle"><%= it.t('main.subtitle') %></p>
+      <% } %>
     </main>
     <dialog id="about-dialog" aria-labelledby="about-title" <%= it.initialDialog === 'about' ? 'open' : '' %>>
       <form method="dialog" class="dialog-content">
