@@ -4,8 +4,9 @@
 
 set -e
 
-echo "=== Building application ==="
-pnpm build
+BUILD_ID=$(git rev-parse --short HEAD)
+echo "=== Building application (BUILD_ID: $BUILD_ID) ==="
+BUILD_ID="$BUILD_ID" pnpm build
 
 echo "=== Copying files to server ==="
 rsync -avz --delete \

@@ -34,6 +34,7 @@ const viteDevServer = process.env.VITE_DEV_SERVER ?? 'http://localhost:5173';
 
 // Single Eta instance – auto-escape HTML and cache templates in production
 const eta = new Eta({ autoEscape: true, cache: !isDev });
+const buildId = process.env.BUILD_ID ?? 'local-dev';
 
 type TemplateContext = {
   lang: Lang;
@@ -43,6 +44,7 @@ type TemplateContext = {
   langPathFor: (targetLang: Lang, key: ModalKey | null) => string;
   initialStateJson: string;
   MODALS: typeof MODALS;
+  buildId: string;
 };
 
 const templateCache: { value: string | null } = { value: null };
@@ -62,6 +64,7 @@ async function loadTemplateString(): Promise<string> {
   const { document } = parseHTML(html);
   const htmlElement = document.documentElement;
   htmlElement.setAttribute('lang', '<%= it.lang %>');
+  htmlElement.setAttribute('data-build-id', '<%= it.buildId %>');
 
   document.querySelectorAll<HTMLElement>('[data-i18n]').forEach((el) => {
     const key = el.getAttribute('data-i18n');
@@ -94,6 +97,21 @@ async function loadTemplateString(): Promise<string> {
       el.setAttribute('href', `<%= it.pathFor(${JSON.stringify(key)}) %>`);
     }
   });
+
+  const buildMeta =
+    document.querySelector<HTMLMetaElement>('[data-build-meta]') ?? document.createElement('meta');
+  buildMeta.setAttribute('name', 'build-id');
+  buildMeta.setAttribute('content', '<%= it.buildId %>');
+  buildMeta.removeAttribute('data-build-meta');
+  if (!buildMeta.parentNode) {
+    document.head.append(buildMeta);
+  }
+
+  const buildInfo = document.querySelector<HTMLElement>('[data-build-info]');
+  if (buildInfo) {
+    buildInfo.setAttribute('title', 'Build <%= it.buildId %>');
+    buildInfo.setAttribute('data-tooltip', 'Build <%= it.buildId %>');
+  }
 
   Object.entries(MODALS).forEach(([key, def]) => {
     const node = document.getElementById(def.id);
@@ -189,6 +207,7 @@ async function renderPage({
       path: buildLocalizedPath(lang, basePath),
     }),
     MODALS,
+    buildId,
   };
 
   const rendered = eta.renderString(template, context);
@@ -233,6 +252,22 @@ async function render404Page(lang: Lang): Promise<string> {
   // Set lang attribute
   const html = document.documentElement;
   html.setAttribute('lang', lang);
+  html.setAttribute('data-build-id', buildId);
+
+  const buildMeta =
+    document.querySelector<HTMLMetaElement>('[data-build-meta]') ?? document.createElement('meta');
+  buildMeta.setAttribute('name', 'build-id');
+  buildMeta.setAttribute('content', buildId);
+  buildMeta.removeAttribute('data-build-meta');
+  if (!buildMeta.parentNode) {
+    document.head.append(buildMeta);
+  }
+
+  const buildInfo = document.querySelector<HTMLElement>('[data-build-info]');
+  if (buildInfo) {
+    buildInfo.setAttribute('title', `Build ${buildId}`);
+    buildInfo.setAttribute('data-tooltip', `Build ${buildId}`);
+  }
 
   // Update language toggles
   document.querySelectorAll<HTMLElement>('.lang-toggle').forEach((link) => {
@@ -268,6 +303,7 @@ async function render404Page(lang: Lang): Promise<string> {
       path: buildLocalizedPath(lang, '/'),
     }),
     MODALS,
+    buildId,
   };
 
   const rendered = eta.renderString(templateString, context);

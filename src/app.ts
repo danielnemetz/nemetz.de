@@ -41,3 +41,13 @@ function init(): void {
 }
 
 init();
+
+const buildId = document.documentElement.dataset.buildId;
+if (buildId) {
+  console.info(`nemetz.de build ${buildId}`);
+}
+
+const buildInfo = document.querySelector<HTMLElement>('[data-build-info]');
+if (buildInfo) {
+  buildInfo.textContent = buildId ?? 'local-dev';
+}

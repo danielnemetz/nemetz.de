@@ -20,6 +20,8 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build
+        env:
+          BUILD_ID: ${{ github.sha }}
         run: pnpm build
 
       - name: Copy files to server

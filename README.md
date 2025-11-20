@@ -163,6 +163,7 @@ docker compose logs -f
    - TypeScript-Transpile (Frontend + Shared)
    - Vite Build → `dist/`
    - Server-Build über `tsc -p tsconfig.server.json` → `dist-server/`
+   - Optional: `BUILD_ID=<commit>` (Commit-Hash) wird an den Server/Client weitergegeben
 
 2. **Docker Image**
    - Basis: `node:20-alpine`
@@ -179,6 +180,13 @@ Die `compose.yml` konfiguriert:
 - Node-Container mit Fastify
 - Traefik-Integration (Labels)
 - Netzwerk: `traefik-network` (extern)
+
+## Build-ID / Version
+
+- Während des Builds kann die Umgebungsvariable `BUILD_ID` gesetzt werden (Commit-Hash).
+- Die GitHub Action setzt automatisch `${{ github.sha }}`.
+- `deploy.sh` setzt `BUILD_ID=$(git rev-parse --short HEAD)` vor dem Build.
+- Die ID ist als Meta-Tag (`<meta name="build-id">`), als Tooltip im Footer (`ⓘ`) und per `console.info` ersichtlich.
 
 ### Vite
 
