@@ -1,12 +1,12 @@
 import Fastify from 'fastify';
 import fastifyStatic from '@fastify/static';
+import fastifyCompress from '@fastify/compress';
 import fastifyProxy from '@fastify/http-proxy';
 import httpProxy from 'http-proxy';
 import { Eta } from 'eta';
 import path from 'node:path';
 import fs from 'node:fs/promises';
 import fsSync from 'node:fs';
-import { parseHTML } from 'linkedom';
 import type { Lang, LocaleDict, ModalKey } from '../src/lib/types.js';
 import { MODALS } from '../src/lib/types.js';
 import {
@@ -23,7 +23,7 @@ const isDev = process.env.NODE_ENV !== 'production';
 const PORT = Number(process.env.PORT ?? 3000);
 const HOST = process.env.HOST ?? '0.0.0.0';
 const rootDir = process.cwd();
-const templateFile = path.join(rootDir, isDev ? 'src/index.html' : 'dist/index.html');
+const templateFile = path.join(rootDir, isDev ? 'src/index.eta' : 'dist/index.eta');
 const publicDir = path.join(rootDir, 'public');
 const distDir = path.join(rootDir, 'dist');
 const localeDir = path.join(
@@ -34,18 +34,77 @@ const viteDevServer = process.env.VITE_DEV_SERVER ?? 'http://localhost:5173';
 
 // Single Eta instance – auto-escape HTML and cache templates in production
 const eta = new Eta({ autoEscape: true, cache: !isDev });
-const buildId = process.env.BUILD_ID ?? 'local-dev';
+// Build ID - read at runtime to pick up container environment
+function getBuildId(): string {
+  return process.env.BUILD_ID ?? 'local-dev';
+}
 
 type TemplateContext = {
   lang: Lang;
   initialDialog: ModalKey | null;
-  translate: (key: string) => string;
+  t: (key: string) => string;
   pathFor: (key: ModalKey | null) => string;
   langPathFor: (targetLang: Lang, key: ModalKey | null) => string;
   initialStateJson: string;
   MODALS: typeof MODALS;
   buildId: string;
+  assets: {
+    script: string;
+    css: string | null;
+  };
+  isDev: boolean;
 };
+
+// Manifest handling
+type Manifest = Record<string, { file: string; css?: string[]; isEntry?: boolean; src?: string }>;
+let manifest: Manifest | null = null;
+
+async function loadManifest(): Promise<Manifest> {
+  if (isDev) return {};
+  if (manifest) return manifest;
+
+  try {
+    // Vite 5+ puts manifest in .vite/manifest.json by default, but we can check both
+    const possiblePaths = [
+      path.join(distDir, '.vite', 'manifest.json'),
+      path.join(distDir, 'manifest.json'),
+    ];
+
+    for (const p of possiblePaths) {
+      if (fsSync.existsSync(p)) {
+        const content = await fs.readFile(p, 'utf-8');
+        manifest = JSON.parse(content) as Manifest;
+        return manifest!;
+      }
+    }
+    console.warn('Manifest not found in dist!');
+    return {};
+  } catch (e) {
+    console.error('Failed to load manifest', e);
+    return {};
+  }
+}
+
+function getAssets(): { script: string; css: string | null } {
+  if (isDev) {
+    return { script: '/app.ts', css: null }; // Vite handles CSS in dev
+  }
+
+  if (!manifest) return { script: '', css: null };
+
+  // Find entry point (usually index.html or app.ts depending on how Vite was triggered)
+  // In our case, we likely have an entry for 'src/index.html' or 'index.html'
+  const entry = Object.values(manifest).find((chunk) => chunk.isEntry);
+
+  if (!entry) {
+    return { script: '', css: null };
+  }
+
+  return {
+    script: `/${entry.file}`,
+    css: entry.css && entry.css.length > 0 ? `/${entry.css[0]}` : null,
+  };
+}
 
 const templateCache: { value: string | null } = { value: null };
 const localeCache = new Map<Lang, LocaleDict>();
@@ -54,111 +113,8 @@ function isLang(value: string | null): value is Lang {
   return value === 'de' || value === 'en';
 }
 
-function isModalKey(value: string | null): value is ModalKey {
-  return value === 'about' || value === 'imprint' || value === 'privacy';
-}
-
 async function loadTemplateString(): Promise<string> {
-  // Base HTML comes from src/index.html in dev or dist/index.html in prod
-  const html = await fs.readFile(templateFile, 'utf8');
-  const { document } = parseHTML(html);
-  const htmlElement = document.documentElement;
-  htmlElement.setAttribute('lang', '<%= it.lang %>');
-  htmlElement.setAttribute('data-build-id', '<%= it.buildId %>');
-
-  document.querySelectorAll<HTMLElement>('[data-i18n]').forEach((el: HTMLElement) => {
-    const key = el.getAttribute('data-i18n');
-    if (!key) {
-      return;
-    }
-    // Use innerHTML for HTML content (keys ending with 'Html'), textContent otherwise
-    const isHtml = key.endsWith('Html');
-    if (isHtml) {
-      el.innerHTML = `<%~ it.translate(${JSON.stringify(key)}) %>`;
-    } else {
-      el.textContent = `<%~ it.translate(${JSON.stringify(key)}) %>`;
-    }
-  });
-
-  document.querySelectorAll<HTMLElement>('.lang-toggle').forEach((link: HTMLElement) => {
-    const lang = link.getAttribute('data-lang');
-    if (isLang(lang)) {
-      link.setAttribute('href', `<%= it.langPathFor(${JSON.stringify(lang)}, it.initialDialog) %>`);
-      link.setAttribute(
-        'aria-current',
-        `<%= ${JSON.stringify(lang)} === it.lang ? 'page' : 'false' %>`,
-      );
-    }
-  });
-
-  document.querySelectorAll<HTMLElement>('[data-open-dialog]').forEach((el: HTMLElement) => {
-    const key = el.getAttribute('data-open-dialog');
-    if (isModalKey(key)) {
-      el.setAttribute('href', `<%= it.pathFor(${JSON.stringify(key)}) %>`);
-    }
-  });
-
-  const buildMeta =
-    document.querySelector<HTMLMetaElement>('[data-build-meta]') ?? document.createElement('meta');
-  buildMeta.setAttribute('name', 'build-id');
-  buildMeta.setAttribute('content', '<%= it.buildId %>');
-  buildMeta.removeAttribute('data-build-meta');
-  if (!buildMeta.parentNode) {
-    document.head.append(buildMeta);
-  }
-
-  const buildInfo = document.querySelector<HTMLElement>('[data-build-info]');
-  if (buildInfo) {
-    buildInfo.setAttribute('title', 'Build <%= it.buildId %>');
-    buildInfo.setAttribute('data-tooltip', 'Build <%= it.buildId %>');
-  }
-
-  document.querySelectorAll<HTMLElement>('[data-build-id-text]').forEach((el: HTMLElement) => {
-    el.textContent = '<%= it.buildId %>';
-    el.setAttribute('title', `Build <%= it.buildId %>`);
-  });
-
-  Object.entries(MODALS).forEach(([key, def]) => {
-    const node = document.getElementById(def.id);
-    if (node) {
-      node.setAttribute('data-open-placeholder', key);
-    }
-  });
-
-  const entryScript = document.querySelector('script[type="module"][src="/app.ts"]');
-  const stateScript = document.createElement('script');
-  stateScript.type = 'module';
-  stateScript.textContent = 'window.__INITIAL_STATE__ = <%~ it.initialStateJson %>;\n';
-  if (entryScript?.parentNode) {
-    entryScript.parentNode.insertBefore(stateScript, entryScript);
-  } else {
-    document.body.append(stateScript);
-  }
-
-  let template = document.toString();
-  template = template.replace(
-    / data-open-placeholder="(about|imprint|privacy)"/g,
-    (_match: string, key: string) => {
-      const def = MODALS[key as ModalKey];
-      if (!def) {
-        return '';
-      }
-      return `<% if (it.initialDialog === '${key}') { %> open<% } %>`;
-    },
-  );
-
-  // Manual backdrop before closing body (needed for SSR open dialogs)
-  template = template.replace(
-    /<\/body>/,
-    `<% if (it.initialDialog) { %><div class="dialog-backdrop" data-backdrop-for="<%= it.MODALS[it.initialDialog].id %>"></div><% } %>\n    </body>`,
-  );
-  template = template
-    .replace(/&lt;%/g, '<%')
-    .replace(/%&gt;/g, '%>')
-    .replace(/&quot;/g, '"')
-    .replace(/&apos;/g, "'")
-    .replace(/&#39;/g, "'");
-  return template;
+  return await fs.readFile(templateFile, 'utf8');
 }
 
 async function getTemplate(): Promise<string> {
@@ -197,13 +153,18 @@ async function renderPage({
   const locale = await loadLocale(lang);
   const fallback = lang === DEFAULT_LANG ? locale : await loadLocale(DEFAULT_LANG);
 
+  // Ensure manifest is loaded in prod
+  if (!isDev && !manifest) {
+    await loadManifest();
+  }
+
   const translator = (key: string): string =>
     getTranslationValue(locale, key) ?? getTranslationValue(fallback, key) ?? '';
 
   const context: TemplateContext = {
     lang,
     initialDialog: dialog,
-    translate: translator,
+    t: translator,
     pathFor: (key) => buildLocalizedPath(lang, getBasePathForKey(key)),
     langPathFor: (targetLang, key) => buildLocalizedPath(targetLang, getBasePathForKey(key)),
     initialStateJson: JSON.stringify({
@@ -212,14 +173,13 @@ async function renderPage({
       path: buildLocalizedPath(lang, basePath),
     }),
     MODALS,
-    buildId,
+    buildId: getBuildId(),
+    assets: getAssets(),
+    isDev,
   };
 
   const rendered = eta.renderString(template, context);
-  if (typeof rendered === 'string') {
-    return rendered;
-  }
-  return await rendered;
+  return rendered;
 }
 
 async function render404Page(lang: Lang): Promise<string> {
@@ -227,84 +187,17 @@ async function render404Page(lang: Lang): Promise<string> {
   const locale = await loadLocale(lang);
   const fallback = lang === DEFAULT_LANG ? locale : await loadLocale(DEFAULT_LANG);
 
+  if (!isDev && !manifest) {
+    await loadManifest();
+  }
+
   const translator = (key: string): string =>
     getTranslationValue(locale, key) ?? getTranslationValue(fallback, key) ?? '';
 
-  // Reuse base template and replace main area with minimal 404 content
-  const { document } = parseHTML(await fs.readFile(templateFile, 'utf-8'));
-
-  // Replace main content
-  const main = document.querySelector('main');
-  if (main) {
-    main.innerHTML = `
-            <h1 style="font-size: 1.5em;">404 | <span data-i18n="notFound.error"><%= it.translate("notFound.error") %></span></h1>
-            <p><a href="<%= it.pathFor(null) %>" data-i18n="notFound.backHome"><%= it.translate("notFound.backHome") %></a></p>
-        `;
-  }
-
-  // Update title
-  const title = document.querySelector('title');
-  if (title) {
-    title.textContent = `${translator('notFound.title')} · nemetz.de`;
-  }
-
-  // Update meta description
-  const metaDesc = document.querySelector('meta[name="description"]');
-  if (metaDesc) {
-    metaDesc.setAttribute('content', translator('notFound.message'));
-  }
-
-  // Set lang attribute
-  const html = document.documentElement;
-  html.setAttribute('lang', lang);
-  html.setAttribute('data-build-id', buildId);
-
-  const buildMeta =
-    document.querySelector<HTMLMetaElement>('[data-build-meta]') ?? document.createElement('meta');
-  buildMeta.setAttribute('name', 'build-id');
-  buildMeta.setAttribute('content', buildId);
-  buildMeta.removeAttribute('data-build-meta');
-  if (!buildMeta.parentNode) {
-    document.head.append(buildMeta);
-  }
-
-  const buildInfo = document.querySelector<HTMLElement>('[data-build-info]');
-  if (buildInfo) {
-    buildInfo.setAttribute('title', `Build ${buildId}`);
-    buildInfo.setAttribute('data-tooltip', `Build ${buildId}`);
-  }
-
-  document.querySelectorAll<HTMLElement>('[data-build-id-text]').forEach((el: HTMLElement) => {
-    el.textContent = buildId;
-    el.setAttribute('title', `Build ${buildId}`);
-  });
-
-  // Update language toggles
-  document.querySelectorAll<HTMLElement>('.lang-toggle').forEach((link: HTMLElement) => {
-    const linkLang = link.getAttribute('data-lang');
-    if (isLang(linkLang)) {
-      link.setAttribute('href', `<%= it.langPathFor(${JSON.stringify(linkLang)}, null) %>`);
-      link.setAttribute(
-        'aria-current',
-        `<%= ${JSON.stringify(linkLang)} === it.lang ? 'page' : 'false' %>`,
-      );
-    }
-  });
-
-  // Note: data-i18n elements in main are already handled by Eta template
-
-  const templateString = document
-    .toString()
-    .replace(/&lt;%/g, '<%')
-    .replace(/%&gt;/g, '%>')
-    .replace(/&quot;/g, '"')
-    .replace(/&apos;/g, "'")
-    .replace(/&#39;/g, "'");
-
-  const context: TemplateContext = {
+  const context: TemplateContext & { is404: boolean } = {
     lang,
     initialDialog: null,
-    translate: translator,
+    t: translator,
     pathFor: (key) => buildLocalizedPath(lang, getBasePathForKey(key)),
     langPathFor: (targetLang, key) => buildLocalizedPath(targetLang, getBasePathForKey(key)),
     initialStateJson: JSON.stringify({
@@ -313,14 +206,13 @@ async function render404Page(lang: Lang): Promise<string> {
       path: buildLocalizedPath(lang, '/'),
     }),
     MODALS,
-    buildId,
+    buildId: getBuildId(),
+    assets: getAssets(),
+    isDev,
+    is404: true,
   };
 
-  const rendered = eta.renderString(templateString, context);
-  if (typeof rendered === 'string') {
-    return rendered;
-  }
-  return await rendered;
+  return eta.renderString(template, context);
 }
 
 // Normalize incoming path to {lang, basePath} and detect redirects
@@ -344,12 +236,17 @@ function determineLang(
 
 async function start(): Promise<void> {
   const fastify = Fastify({ logger: true }); // Main HTTP server
+
   const wsProxy = httpProxy.createProxyServer({
     target: viteDevServer.replace('http', 'ws'),
     ws: true,
     changeOrigin: true,
   });
   wsProxy.on('error', (err) => fastify.log.error({ err }, 'WS proxy error'));
+
+
+
+
 
   if (isDev) {
     // Proxy Vite-internal routes during dev (HMR, source files, etc.)
@@ -429,6 +326,7 @@ async function start(): Promise<void> {
         decorateReply: false,
         cacheControl: true,
         maxAge: '1y',
+        preCompressed: true, // Serve .gz and .br files if available
       });
     }
 
@@ -457,7 +355,7 @@ async function start(): Promise<void> {
     }
   }
 
-  fastify.setNotFoundHandler(async (request, reply) => {
+  fastify.get('/*', async (request, reply) => {
     const url = new URL(request.raw.url ?? '/', `http://localhost`);
     const { lang, basePath, needsRedirect, search } = determineLang(url.pathname, url.searchParams);
 

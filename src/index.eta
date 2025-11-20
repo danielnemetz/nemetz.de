@@ -7,7 +7,7 @@
       name="description"
       content="Daniel Nemetz - Senior Software Engineer based in Hamburg, Germany. Contact information and professional profile."
     />
-    <meta name="build-id" content="local-dev" data-build-meta />
+    <meta name="build-id" content="<%= it.buildId %>" data-build-meta />
 
     <title>Daniel Nemetz &middot; Senior Software Engineer &middot; nemetz.de</title>
 
@@ -17,6 +17,9 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png" />
     <link rel="manifest" href="/favicons/site.webmanifest" />
     <link rel="icon" href="/favicons/favicon.ico" sizes="any" />
+    <% if (it.assets.css) { %>
+    <link rel="stylesheet" href="<%= it.assets.css %>">
+    <% } %>
   </head>
 
   <body>
@@ -37,60 +40,60 @@
         data-tooltip="About me"
       ></a>
       <h1><a href="/about" data-open-dialog="about">Daniel Nemetz</a></h1>
-      <p data-i18n="main.subtitle"></p>
+      <p data-i18n="main.subtitle"><%= it.t('main.subtitle') %></p>
     </main>
-    <dialog id="about-dialog" aria-labelledby="about-title">
+    <dialog id="about-dialog" aria-labelledby="about-title" <%= it.initialDialog === 'about' ? 'open' : '' %>>
       <form method="dialog" class="dialog-content">
         <div class="dialog-header">
-          <h2 id="about-title" data-i18n="about.title"></h2>
+          <h2 id="about-title" data-i18n="about.title"><%= it.t('about.title') %></h2>
         </div>
         <div class="dialog-body typography">
-          <p data-i18n="about.intro"></p>
-          <p data-i18n="about.expertise"></p>
-          <p data-i18n="about.mentoring_accessibility"></p>
-          <p data-i18n="about.outro"></p>
+          <p data-i18n="about.intro"><%= it.t('about.intro') %></p>
+          <p data-i18n="about.expertise"><%= it.t('about.expertise') %></p>
+          <p data-i18n="about.mentoring_accessibility"><%= it.t('about.mentoring_accessibility') %></p>
+          <p data-i18n="about.outro"><%= it.t('about.outro') %></p>
         </div>
         <div class="dialog-actions" role="toolbar" aria-label="Dialog actions">
-          <a class="btn-link primary" href="mailto:daniel@nemetz.de" data-i18n="about.cta"></a>
-          <button class="btn" value="close" autofocus data-i18n="common.close"></button>
+          <a class="btn-link primary" href="mailto:daniel@nemetz.de" data-i18n="about.cta"><%= it.t('about.cta') %></a>
+          <button class="btn" value="close" autofocus data-i18n="common.close"><%= it.t('common.close') %></button>
         </div>
       </form>
     </dialog>
-    <dialog id="imprint-dialog" aria-labelledby="imprint-title">
+    <dialog id="imprint-dialog" aria-labelledby="imprint-title" <%= it.initialDialog === 'imprint' ? 'open' : '' %>>
       <form method="dialog" class="dialog-content">
         <div class="dialog-header">
-          <h2 id="imprint-title" data-i18n="imprint.title"></h2>
+          <h2 id="imprint-title" data-i18n="imprint.title"><%= it.t('imprint.title') %></h2>
         </div>
         <div class="dialog-body typography">
-          <p data-i18n="imprint.legalIntro"></p>
-          <p data-i18n="imprint.name"></p>
-          <p data-i18n="imprint.addressHtml"></p>
-          <p data-i18n="imprint.contactHtml"></p>
-          <p data-i18n="imprint.consumerNoticeHtml"></p>
+          <p data-i18n="imprint.legalIntro"><%= it.t('imprint.legalIntro') %></p>
+          <p data-i18n="imprint.name"><%= it.t('imprint.name') %></p>
+          <p data-i18n="imprint.addressHtml"><%~ it.t('imprint.addressHtml') %></p>
+          <p data-i18n="imprint.contactHtml"><%~ it.t('imprint.contactHtml') %></p>
+          <p data-i18n="imprint.consumerNoticeHtml"><%~ it.t('imprint.consumerNoticeHtml') %></p>
         </div>
         <div class="dialog-actions" role="toolbar" aria-label="Imprint actions">
-          <button class="btn" value="close" autofocus data-i18n="common.close"></button>
+          <button class="btn" value="close" autofocus data-i18n="common.close"><%= it.t('common.close') %></button>
         </div>
       </form>
     </dialog>
-    <dialog id="privacy-dialog" aria-labelledby="privacy-title">
+    <dialog id="privacy-dialog" aria-labelledby="privacy-title" <%= it.initialDialog === 'privacy' ? 'open' : '' %>>
       <form method="dialog" class="dialog-content">
         <div class="dialog-header">
-          <h2 id="privacy-title" data-i18n="privacy.title"></h2>
+          <h2 id="privacy-title" data-i18n="privacy.title"><%= it.t('privacy.title') %></h2>
         </div>
         <div class="dialog-body typography">
-          <p data-i18n="privacy.intro"></p>
-          <p data-i18n="privacy.responsibleHtml"></p>
-          <p data-i18n="privacy.contactHtml"></p>
-          <p data-i18n="privacy.dataCollection"></p>
-          <p data-i18n="privacy.cookies"></p>
-          <p data-i18n="privacy.externalLinks"></p>
-          <p data-i18n="privacy.emailContact"></p>
-          <p data-i18n="privacy.rightsHtml"></p>
-          <p data-i18n="privacy.changes"></p>
+          <p data-i18n="privacy.intro"><%= it.t('privacy.intro') %></p>
+          <p data-i18n="privacy.responsibleHtml"><%~ it.t('privacy.responsibleHtml') %></p>
+          <p data-i18n="privacy.contactHtml"><%~ it.t('privacy.contactHtml') %></p>
+          <p data-i18n="privacy.dataCollection"><%= it.t('privacy.dataCollection') %></p>
+          <p data-i18n="privacy.cookies"><%= it.t('privacy.cookies') %></p>
+          <p data-i18n="privacy.externalLinks"><%= it.t('privacy.externalLinks') %></p>
+          <p data-i18n="privacy.emailContact"><%= it.t('privacy.emailContact') %></p>
+          <p data-i18n="privacy.rightsHtml"><%~ it.t('privacy.rightsHtml') %></p>
+          <p data-i18n="privacy.changes"><%= it.t('privacy.changes') %></p>
         </div>
         <div class="dialog-actions" role="toolbar" aria-label="Privacy actions">
-          <button class="btn" value="close" autofocus data-i18n="common.close"></button>
+          <button class="btn" value="close" autofocus data-i18n="common.close"><%= it.t('common.close') %></button>
         </div>
       </form>
     </dialog>
@@ -108,13 +111,13 @@
         </div>
         <div class="divider"></div>
         <div class="legal" role="toolbar" aria-label="Footer legal">
-          <span class="build-id" data-build-id-text title="Build local-dev">local-dev</span>
+          <span class="build-id" data-build-id-text title="Build <%= it.buildId %>"><%= it.buildId %></span>
           <span class="separator">&middot;</span>
           <span class="copyright">2025</span>
           <span class="separator">&middot;</span>
-          <a href="/imprint" data-open-dialog="imprint" data-i18n="imprint.title"></a>
+          <a href="/imprint" data-open-dialog="imprint" data-i18n="imprint.title"><%= it.t('imprint.title') %></a>
           <span class="separator">&middot;</span>
-          <a href="/privacy" data-open-dialog="privacy" data-i18n="privacy.title"></a>
+          <a href="/privacy" data-open-dialog="privacy" data-i18n="privacy.title"><%= it.t('privacy.title') %></a>
         </div>
       </div>
       <div class="icons">
@@ -130,6 +133,9 @@
         </a>
       </div>
     </footer>
-    <script type="module" src="/app.ts"></script>
+    <% if (it.initialDialog) { %>
+    <div class="dialog-backdrop" data-backdrop-for="<%= it.MODALS[it.initialDialog].id %>"></div>
+    <% } %>
+    <script type="module" src="<%= it.assets.script %>"></script>
   </body>
 </html>
