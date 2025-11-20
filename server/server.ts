@@ -1,219 +1,20 @@
 import Fastify from 'fastify';
 import fastifyStatic from '@fastify/static';
-import fastifyCompress from '@fastify/compress';
 import fastifyProxy from '@fastify/http-proxy';
 import httpProxy from 'http-proxy';
-import { Eta } from 'eta';
 import path from 'node:path';
 import fs from 'node:fs/promises';
 import fsSync from 'node:fs';
-import type { Lang, LocaleDict, ModalKey } from '../src/lib/types.js';
-import { MODALS } from '../src/lib/types.js';
+import type { Lang, ModalKey } from '../src/lib/types.js';
 import {
   DEFAULT_LANG,
   SUPPORTED_LANGS,
   buildLocalizedPath,
-  getBasePathForKey,
   getKeyByPath,
   splitLocalizedPath,
 } from '../src/lib/routing.js';
-import { getTranslationValue } from '../src/lib/i18n-utils.js';
-
-const isDev = process.env.NODE_ENV !== 'production';
-const PORT = Number(process.env.PORT ?? 3000);
-const HOST = process.env.HOST ?? '0.0.0.0';
-const rootDir = process.cwd();
-const templateFile = path.join(rootDir, isDev ? 'src/index.eta' : 'dist/index.eta');
-const publicDir = path.join(rootDir, 'public');
-const distDir = path.join(rootDir, 'dist');
-const localeDir = path.join(
-  rootDir,
-  isDev ? path.join('public', 'i18n') : path.join('dist', 'i18n'),
-);
-const viteDevServer = process.env.VITE_DEV_SERVER ?? 'http://localhost:5173';
-
-// Single Eta instance – auto-escape HTML and cache templates in production
-const eta = new Eta({ autoEscape: true, cache: !isDev });
-// Build ID - read at runtime to pick up container environment
-function getBuildId(): string {
-  return process.env.BUILD_ID ?? 'local-dev';
-}
-
-type TemplateContext = {
-  lang: Lang;
-  initialDialog: ModalKey | null;
-  t: (key: string) => string;
-  pathFor: (key: ModalKey | null) => string;
-  langPathFor: (targetLang: Lang, key: ModalKey | null) => string;
-  initialStateJson: string;
-  MODALS: typeof MODALS;
-  buildId: string;
-  assets: {
-    script: string;
-    css: string | null;
-  };
-  isDev: boolean;
-};
-
-// Manifest handling
-type Manifest = Record<string, { file: string; css?: string[]; isEntry?: boolean; src?: string }>;
-let manifest: Manifest | null = null;
-
-async function loadManifest(): Promise<Manifest> {
-  if (isDev) return {};
-  if (manifest) return manifest;
-
-  try {
-    // Vite 5+ puts manifest in .vite/manifest.json by default, but we can check both
-    const possiblePaths = [
-      path.join(distDir, '.vite', 'manifest.json'),
-      path.join(distDir, 'manifest.json'),
-    ];
-
-    for (const p of possiblePaths) {
-      if (fsSync.existsSync(p)) {
-        const content = await fs.readFile(p, 'utf-8');
-        manifest = JSON.parse(content) as Manifest;
-        return manifest!;
-      }
-    }
-    console.warn('Manifest not found in dist!');
-    return {};
-  } catch (e) {
-    console.error('Failed to load manifest', e);
-    return {};
-  }
-}
-
-function getAssets(): { script: string; css: string | null } {
-  if (isDev) {
-    return { script: '/app.ts', css: null }; // Vite handles CSS in dev
-  }
-
-  if (!manifest) return { script: '', css: null };
-
-  // Find entry point (usually index.html or app.ts depending on how Vite was triggered)
-  // In our case, we likely have an entry for 'src/index.html' or 'index.html'
-  const entry = Object.values(manifest).find((chunk) => chunk.isEntry);
-
-  if (!entry) {
-    return { script: '', css: null };
-  }
-
-  return {
-    script: `/${entry.file}`,
-    css: entry.css && entry.css.length > 0 ? `/${entry.css[0]}` : null,
-  };
-}
-
-const templateCache: { value: string | null } = { value: null };
-const localeCache = new Map<Lang, LocaleDict>();
-
-function isLang(value: string | null): value is Lang {
-  return value === 'de' || value === 'en';
-}
-
-async function loadTemplateString(): Promise<string> {
-  return await fs.readFile(templateFile, 'utf8');
-}
-
-async function getTemplate(): Promise<string> {
-  if (isDev) {
-    return loadTemplateString();
-  }
-  if (!templateCache.value) {
-    templateCache.value = await loadTemplateString();
-  }
-  return templateCache.value;
-}
-
-async function loadLocale(lang: Lang): Promise<LocaleDict> {
-  if (!isDev && localeCache.has(lang)) {
-    return localeCache.get(lang)!;
-  }
-  const filePath = path.join(localeDir, `${lang}.json`);
-  const raw = await fs.readFile(filePath, 'utf8');
-  const parsed = JSON.parse(raw) as LocaleDict;
-  if (!isDev) {
-    localeCache.set(lang, parsed);
-  }
-  return parsed;
-}
-
-async function renderPage({
-  lang,
-  dialog,
-  basePath,
-}: {
-  lang: Lang;
-  dialog: ModalKey | null;
-  basePath: string;
-}): Promise<string> {
-  const template = await getTemplate();
-  const locale = await loadLocale(lang);
-  const fallback = lang === DEFAULT_LANG ? locale : await loadLocale(DEFAULT_LANG);
-
-  // Ensure manifest is loaded in prod
-  if (!isDev && !manifest) {
-    await loadManifest();
-  }
-
-  const translator = (key: string): string =>
-    getTranslationValue(locale, key) ?? getTranslationValue(fallback, key) ?? '';
-
-  const context: TemplateContext = {
-    lang,
-    initialDialog: dialog,
-    t: translator,
-    pathFor: (key) => buildLocalizedPath(lang, getBasePathForKey(key)),
-    langPathFor: (targetLang, key) => buildLocalizedPath(targetLang, getBasePathForKey(key)),
-    initialStateJson: JSON.stringify({
-      lang,
-      dialog,
-      path: buildLocalizedPath(lang, basePath),
-    }),
-    MODALS,
-    buildId: getBuildId(),
-    assets: getAssets(),
-    isDev,
-  };
-
-  const rendered = eta.renderString(template, context);
-  return rendered;
-}
-
-async function render404Page(lang: Lang): Promise<string> {
-  const template = await getTemplate();
-  const locale = await loadLocale(lang);
-  const fallback = lang === DEFAULT_LANG ? locale : await loadLocale(DEFAULT_LANG);
-
-  if (!isDev && !manifest) {
-    await loadManifest();
-  }
-
-  const translator = (key: string): string =>
-    getTranslationValue(locale, key) ?? getTranslationValue(fallback, key) ?? '';
-
-  const context: TemplateContext & { is404: boolean } = {
-    lang,
-    initialDialog: null,
-    t: translator,
-    pathFor: (key) => buildLocalizedPath(lang, getBasePathForKey(key)),
-    langPathFor: (targetLang, key) => buildLocalizedPath(targetLang, getBasePathForKey(key)),
-    initialStateJson: JSON.stringify({
-      lang,
-      dialog: null,
-      path: buildLocalizedPath(lang, '/'),
-    }),
-    MODALS,
-    buildId: getBuildId(),
-    assets: getAssets(),
-    isDev,
-    is404: true,
-  };
-
-  return eta.renderString(template, context);
-}
+import { isDev, PORT, HOST, viteDevServer, distDir } from './config.js';
+import { renderPage, render404Page } from './rendering.js';
 
 // Normalize incoming path to {lang, basePath} and detect redirects
 function determineLang(
@@ -222,7 +23,7 @@ function determineLang(
 ): { lang: Lang; basePath: string; needsRedirect: boolean; search: string } {
   const { lang: pathLang, basePath } = splitLocalizedPath(pathname);
   const queryLang = searchParams.get('lang');
-  const explicitLang = isLang(queryLang) ? queryLang : null;
+  const explicitLang = queryLang === 'de' || queryLang === 'en' ? queryLang : null;
   const finalLang = pathLang ?? explicitLang ?? DEFAULT_LANG;
   const sanitizedSearch = new URLSearchParams(searchParams);
   if (sanitizedSearch.has('lang')) {
