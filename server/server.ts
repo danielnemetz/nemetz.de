@@ -13,8 +13,15 @@ import {
   getKeyByPath,
   splitLocalizedPath,
 } from '../src/lib/routing.js';
-import { isDev, PORT, HOST, viteDevServer, distDir } from './config.js';
+import {
+  isDev,
+  PORT,
+  HOST,
+  viteDevServer,
+  distDir,
+} from './config.js';
 import { renderPage, render404Page } from './rendering.js';
+import { generateSitemap } from './sitemap.js';
 
 // Normalize incoming path to {lang, basePath} and detect redirects
 function determineLang(
@@ -159,6 +166,14 @@ async function start(): Promise<void> {
       });
     }
   }
+
+  fastify.get('/sitemap.xml', async (_req, reply) => {
+    const xml = generateSitemap();
+    return reply
+      .type('application/xml')
+      .header('Cache-Control', 'public, max-age=3600')
+      .send(xml);
+  });
 
   fastify.get('/*', async (request, reply) => {
     const url = new URL(request.raw.url ?? '/', `http://localhost`);
