@@ -7,6 +7,10 @@ set -e
 ENV=$1
 
 if [ "$ENV" == "prod" ]; then
+  if [ -n "$(git status --porcelain)" ]; then
+    echo "❌ Error: Uncommitted changes detected. Please commit or stash them before deploying to production."
+    exit 1
+  fi
   echo "🚀 Deploying to PRODUCTION"
   REMOTE_DIR="~/nemetz.de"
   COMPOSE_CMD="docker compose"
