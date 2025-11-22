@@ -16,8 +16,8 @@
     "lint:html": "htmlhint \"src/**/*.html\" \"public/**/*.html\"",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "deploy:prod": "./scripts/deploy.sh",
-    "deploy:pre": "./scripts/deploy-pre.sh"
+    "deploy:prod": "./scripts/deploy.sh prod",
+    "deploy:pre": "./scripts/deploy.sh staging"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
