@@ -51,9 +51,28 @@
     padding: var(--spacing-lg);
     box-sizing: border-box;
 
+    // Use flexbox to ensure content fills height
+    &[open] {
+      display: flex;
+      flex-direction: column;
+    }
+
     .dialog-content {
       max-height: none;
       height: 100%;
+    }
+
+    .dialog-body {
+      display: flex;
+      flex-direction: column;
+
+      >*:first-child {
+        margin-top: auto;
+      }
+
+      >*:last-child {
+        margin-bottom: auto;
+      }
     }
   }
 
