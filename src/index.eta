@@ -116,9 +116,9 @@
         </div>
         <div class="divider"></div>
         <div class="legal" role="toolbar" aria-label="Footer legal">
-          <span class="build-id" data-build-id-text title="Build <%= it.buildId %>"><%= it.buildId %></span>
+          <a href="https://github.com/danielnemetz/nemetz.de/commit/<%= it.buildId %>" target="_blank" rel="noopener noreferrer" class="build-id" data-build-id-text title="Build <%= it.buildId %>"><%= it.buildId %></a>
           <span class="separator">&middot;</span>
-          <span class="copyright">2025</span>
+          <span class="copyright">© 2025</span>
           <span class="separator">&middot;</span>
           <a href="/imprint" data-open-dialog="imprint" data-i18n="imprint.title"><%= it.t('imprint.title') %></a>
           <span class="separator">&middot;</span>

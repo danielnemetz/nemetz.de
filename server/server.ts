@@ -14,13 +14,7 @@ import {
   getKeyByPath,
   splitLocalizedPath,
 } from '../src/lib/routing.js';
-import {
-  isDev,
-  PORT,
-  HOST,
-  viteDevServer,
-  distDir,
-} from './config.js';
+import { isDev, PORT, HOST, viteDevServer, distDir } from './config.js';
 import { renderPage, render404Page } from './rendering.js';
 import { generateSitemap } from './sitemap.js';
 
@@ -31,7 +25,7 @@ function determineLang(
 ): { lang: Lang; basePath: string; needsRedirect: boolean; search: string } {
   const { lang: pathLang, basePath } = splitLocalizedPath(pathname);
   const queryLang = searchParams.get('lang');
-  const explicitLang = (queryLang === 'de' || queryLang === 'en') ? queryLang : null;
+  const explicitLang = queryLang === 'de' || queryLang === 'en' ? queryLang : null;
   const finalLang = pathLang ?? explicitLang ?? DEFAULT_LANG;
   const sanitizedSearch = new URLSearchParams(searchParams);
   if (sanitizedSearch.has('lang')) {
@@ -170,10 +164,7 @@ async function start(): Promise<void> {
 
   fastify.get('/sitemap.xml', async (_req, reply) => {
     const xml = generateSitemap();
-    return reply
-      .type('application/xml')
-      .header('Cache-Control', 'public, max-age=3600')
-      .send(xml);
+    return reply.type('application/xml').header('Cache-Control', 'public, max-age=3600').send(xml);
   });
 
   fastify.get('/*', async (request, reply) => {

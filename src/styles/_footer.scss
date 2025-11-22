@@ -69,7 +69,9 @@ footer {
   }
 
   .contact a,
-  .legal a {
+  .legal a,
+  .legal .copyright,
+  .legal .build-id {
     position: relative;
     display: inline-flex;
     align-items: center;
@@ -81,12 +83,6 @@ footer {
 
   .legal {
     .copyright {
-      color: var(--color-text-separator);
-      font-size: 0.9em;
-      opacity: 0.7;
-    }
-
-    .build-id {
       color: var(--color-text-separator);
       font-size: 0.9em;
       opacity: 0.7;
