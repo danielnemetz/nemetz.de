@@ -12,39 +12,39 @@ services:
     labels:
       - 'traefik.enable=true'
 
-      # HTTPS Router - valid routes and static assets (higher priority)
-      - 'traefik.http.routers.nemetz-de-pre.rule=Host(`pre.nemetz.de`) && (Path(`/`) || PathPrefix(`/de`) || PathPrefix(`/en`) || PathPrefix(`/assets`) || PathPrefix(`/images`) || PathPrefix(`/fonts`) || PathPrefix(`/favicons`) || PathPrefix(`/i18n`) || Path(`/index.html`) || Path(`/404.html`) || Path(`/sitemap.xml`))'
+      # Middleware: Compression
+      # Enable gzip/brotli compression for responses
+      - 'traefik.http.middlewares.nemetz-pre-compress.compress=true'
+
+      # Middleware: Security Headers
+      # Enforce HTTPS redirects and set security-related HTTP headers
+      - 'traefik.http.middlewares.nemetz-pre-security.headers.sslredirect=true'
+      - 'traefik.http.middlewares.nemetz-pre-security.headers.stsseconds=31536000'
+      - 'traefik.http.middlewares.nemetz-pre-security.headers.stsincludesubdomains=true'
+      - 'traefik.http.middlewares.nemetz-pre-security.headers.stspreload=true'
+      - 'traefik.http.middlewares.nemetz-pre-security.headers.contenttypenosniff=true'
+      - 'traefik.http.middlewares.nemetz-pre-security.headers.browserxssfilter=true'
+
+      # Middleware: Proxy Headers
+      # Forward X-Forwarded-Proto to backend for proper scheme detection
+      - 'traefik.http.middlewares.nemetz-pre-proxy-headers.headers.customrequestheaders.X-Forwarded-Proto=https'
+
+      # Router: HTTPS (websecure entrypoint)
+      # Matches all requests to pre.nemetz.de via TLS
+      - 'traefik.http.routers.nemetz-de-pre.rule=Host(`pre.nemetz.de`)'
       - 'traefik.http.routers.nemetz-de-pre.entrypoints=websecure'
       - 'traefik.http.routers.nemetz-de-pre.tls.certresolver=cloudflare'
-      - 'traefik.http.routers.nemetz-de-pre.middlewares=headers-nemetz-de-pre'
+      - 'traefik.http.routers.nemetz-de-pre.middlewares=nemetz-pre-compress,nemetz-pre-security,nemetz-pre-proxy-headers@docker'
       - 'traefik.http.routers.nemetz-de-pre.service=nemetz-de-pre'
-      - 'traefik.http.routers.nemetz-de-pre.priority=10'
 
-      # HTTPS Router - catch-all for invalid routes (lower priority)
-      - 'traefik.http.routers.nemetz-de-pre-404.rule=Host(`pre.nemetz.de`)'
-      - 'traefik.http.routers.nemetz-de-pre-404.entrypoints=websecure'
-      - 'traefik.http.routers.nemetz-de-pre-404.tls.certresolver=cloudflare'
-      - 'traefik.http.routers.nemetz-de-pre-404.middlewares=headers-nemetz-de-pre'
-      - 'traefik.http.routers.nemetz-de-pre-404.service=nemetz-de-pre'
-      - 'traefik.http.routers.nemetz-de-pre-404.priority=1'
+      # Router: HTTP (web entrypoint)
+      # Redirects HTTP to HTTPS via security middleware
+      - 'traefik.http.routers.nemetz-de-pre-http.rule=Host(`pre.nemetz.de`)'
+      - 'traefik.http.routers.nemetz-de-pre-http.entrypoints=web'
+      - 'traefik.http.routers.nemetz-de-pre-http.middlewares=nemetz-pre-security'
+      - 'traefik.http.routers.nemetz-de-pre-http.service=nemetz-de-pre'
 
-      # HTTP Router - valid routes and static assets (higher priority)
-      - 'traefik.http.routers.nemetz-de-web-pre.rule=Host(`pre.nemetz.de`) && (Path(`/`) || PathPrefix(`/de`) || PathPrefix(`/en`) || PathPrefix(`/assets`) || PathPrefix(`/images`) || PathPrefix(`/fonts`) || PathPrefix(`/favicons`) || PathPrefix(`/i18n`) || Path(`/index.html`) || Path(`/404.html`) || Path(`/sitemap.xml`))'
-      - 'traefik.http.routers.nemetz-de-web-pre.entrypoints=web'
-      - 'traefik.http.routers.nemetz-de-web-pre.service=nemetz-de-pre'
-      - 'traefik.http.routers.nemetz-de-web-pre.priority=10'
-
-      # HTTP Router - catch-all for invalid routes (lower priority)
-      - 'traefik.http.routers.nemetz-de-web-pre-404.rule=Host(`pre.nemetz.de`)'
-      - 'traefik.http.routers.nemetz-de-web-pre-404.entrypoints=web'
-      - 'traefik.http.routers.nemetz-de-web-pre-404.service=nemetz-de-pre'
-      - 'traefik.http.routers.nemetz-de-web-pre-404.priority=1'
-
-      # Middlewares
-      - 'traefik.http.middlewares.headers-nemetz-de-pre.headers.customrequestheaders.X-Forwarded-Proto=https'
-      - 'traefik.http.middlewares.headers-nemetz-de-pre.headers.customrequestheaders.X-Forwarded-Ssl=on'
-
-      # Services
+      # Service Definition
       - 'traefik.http.services.nemetz-de-pre.loadbalancer.server.port=3000'
 
 networks:
