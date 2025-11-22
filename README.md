@@ -1,286 +1,308 @@
 # nemetz.de
 
-Persönliche Website von Daniel Nemetz - gebaut mit TypeScript, SASS und Vite, deployed via Docker.
+Personal website of Daniel Nemetz - built with TypeScript, SASS, and Vite, deployed via Docker.
 
-## Projektstruktur
+## Project Structure
 
 ```
 nemetz.de/
-├── src/                    # Quellcode (TypeScript, SASS, HTML)
-│   ├── lib/                # TypeScript Module (modulare Struktur)
-│   ├── styles/             # SASS Module (modulare Struktur)
-│   ├── app.ts              # Hauptdatei
-│   ├── index.html          # HTML Template
-│   └── styles.scss         # Haupt-Stylesheet (importiert alle Module)
-├── public/                 # Statische Assets (fonts, images, i18n, favicons)
-├── dist/                   # Build-Output (wird beim Build erstellt)
-├── Dockerfile              # Multi-Stage Docker Build
-├── compose.yml             # Docker Compose Konfiguration
-├── package.json            # Dependencies und Scripts
-├── vite.config.ts          # Vite Build-Konfiguration
-└── tsconfig*.json          # TypeScript-Konfiguration
+├── src/                     # Source code (TypeScript, SASS, Eta templates)
+│   ├── lib/                 # TypeScript modules
+│   ├── styles/              # SASS modules
+│   ├── app.ts               # Main entry point
+│   ├── index.eta            # Eta HTML template
+│   └── styles.scss          # Main stylesheet (imports all modules)
+├── server/                  # Fastify server
+│   ├── server.ts            # Server entry point
+│   ├── rendering.ts         # Server-side rendering
+│   └── config.ts            # Server configuration
+├── public/                  # Static assets (fonts, images, i18n, favicons)
+├── scripts/                 # Build and deployment scripts
+├── dist/                    # Frontend build output
+├── dist-server/             # Server build output
+├── Dockerfile               # Multi-stage Docker build
+├── compose.yml              # Production Docker Compose config
+├── compose.pre.yml          # Staging Docker Compose config
+└── package.json             # Dependencies and scripts
 ```
 
-## Voraussetzungen
+## Prerequisites
 
-- **Lokal (Development):**
+- **Local Development:**
   - Node.js 22+
-  - pnpm (wird automatisch via corepack aktiviert)
+  - pnpm (activated via corepack)
 
-- **Server (Production):**
+- **Production Server:**
   - Docker & Docker Compose
-  - Traefik-Netzwerk (`traefik-network`)
+  - Traefik network (`traefik-network`)
 
-## Lokale Entwicklung
+## Local Development
 
-### Dependencies installieren
+### Install Dependencies
 
 ```bash
 pnpm install
 ```
 
-### Development Server starten
+### Start Development Server
 
 ```bash
+# Frontend only (Vite)
 pnpm dev
+
+# Backend only (Fastify)
+pnpm dev:server
+
+# Both (recommended)
+pnpm dev:full
 ```
 
-Startet Vite Dev-Server auf `http://localhost:5173` mit Hot Module Replacement.
+This starts:
+- Vite dev server on `http://localhost:5173`
+- Fastify server on `http://localhost:3000`
 
-### Production Build lokal testen
+### Production Build (Local)
 
 ```bash
 pnpm build
 ```
 
-Erstellt optimierten Build in `dist/` Verzeichnis.
+Creates optimized build in `dist/` and `dist-server/`.
 
-### Production Build lokal previewen
+### Preview Production Build
 
 ```bash
-pnpm preview
+pnpm start:server
 ```
 
-Startet lokalen Server mit Production Build.
+Starts Fastify server with production build on port 3000.
 
-## Docker Build
+## Deployment
 
-### Lokaler Docker Build (Test)
+### Staging
+
+```bash
+pnpm deploy:pre
+# or
+./scripts/deploy.sh staging
+```
+
+Deploys to `pre.nemetz.de`.
+
+### Production
+
+```bash
+pnpm deploy:prod
+# or
+./scripts/deploy.sh prod
+```
+
+Deploys to `nemetz.de`.
+
+**Production Safety Check:** The deploy script prevents deployment if there are uncommitted changes.
+
+### Deployment Process
+
+1. Build application locally (`pnpm build`)
+2. `rsync` artifacts to server (`dist/`, `dist-server/`, configs)
+3. Build Docker image on server
+4. Start container via Docker Compose
+
+## Architecture
+
+### Frontend
+
+- **Framework:** Vanilla TypeScript (no framework)
+- **Build Tool:** Vite
+- **Styling:** SASS with modular structure
+- **Templating:** Eta (server-side rendering)
+- **Internationalization:** Custom i18n (English/German)
+- **Routing:** Client-side SPA routing with dialog support
+
+### Backend
+
+- **Server:** Fastify 5
+- **Rendering:** Server-side rendering with Eta templates
+- **Compression:** Traefik (gzip/brotli for HTML)
+- **Static Assets:** Pre-compressed by Vite (`.gz`, `.br`)
+
+### Infrastructure
+
+- **Reverse Proxy:** Traefik
+- **Compression:** Traefik middleware for dynamic HTML
+- **Security Headers:** HSTS, Content-Type nosniff, XSS filter
+- **SSL:** Let's Encrypt via Traefik
+
+## Optimization Features
+
+- **Critical CSS:** Inlined in HTML
+- **Font Subsetting:** Latin-1 range (EN/DE)
+- **Font Format:** WOFF2
+- **Font Preloading:** Critical fonts preloaded
+- **Image Optimization:** WebP format
+- **Pre-compression:** Static assets compressed during build
+- **i18n Inlining:** Translation data inlined in initial HTML
+
+## NPM Scripts
+
+| Script              | Description                          |
+| ------------------- | ------------------------------------ |
+| `pnpm dev`          | Start Vite dev server                |
+| `pnpm dev:server`   | Start Fastify dev server             |
+| `pnpm dev:full`     | Start both dev servers               |
+| `pnpm build`        | Build for production                 |
+| `pnpm start:server` | Start production server              |
+| `pnpm lint`         | Run ESLint, Stylelint, HTMLHint      |
+| `pnpm format`       | Format all files with Prettier       |
+| `pnpm format:check` | Check formatting without changes     |
+| `pnpm deploy:prod`  | Deploy to production                 |
+| `pnpm deploy:pre`   | Deploy to staging                    |
+
+## Linting & Formatting
+
+- **ESLint** for TypeScript
+- **Stylelint** for SCSS/CSS
+- **HTMLHint** for HTML
+- **Prettier** for consistent formatting
+
+```bash
+# Check everything
+pnpm lint
+
+# Auto-format
+pnpm format
+```
+
+## Docker
+
+### Build Image
 
 ```bash
 docker compose build
 ```
 
-### Container starten (lokal)
+### Start Container
 
 ```bash
 docker compose up -d
 ```
 
-### Logs ansehen
+### View Logs
 
 ```bash
 docker compose logs -f
 ```
 
-## Deployment
-
-### GitHub Actions
-
-Jeder Push auf `main` triggert das Workflow `deploy.yml`. Die Action führt `pnpm build` aus, kopiert die Artefakte (`dist/`, `dist-server/`, `package.json`, `pnpm-lock.yaml`, `Dockerfile`, `compose.yml`) auf den Server und startet dort `docker compose build && docker compose up -d`.
-
-### Manuell
-
-```bash
-./deploy.sh
-```
-
-Das Skript führt lokal `pnpm build` aus, synchronisiert dieselben Artefakte auf den Server und startet anschließend den Container (analog zur CI).
-
-### Status prüfen (Server)
-
-```bash
-# Container-Status
-docker compose ps
-
-# Logs
-docker compose logs -f
-```
-
-## Wartung
-
-### Dependencies aktualisieren
-
-```bash
-# Dependencies updaten
-pnpm update
-
-# Lockfile aktualisieren
-pnpm install
-
-# Änderungen committen
-git add package.json pnpm-lock.yaml
-git commit -m "chore: update dependencies"
-```
-
-### Container neu bauen
-
-```bash
-# Auf dem Server
-cd ~/nemetz.de
-docker compose build --no-cache
-docker compose up -d
-```
-
-### Container neu starten
+### Restart Container
 
 ```bash
 docker compose restart
 ```
 
-### Container stoppen
+### Stop Container
 
 ```bash
 docker compose down
 ```
 
-### Logs prüfen
+## Maintenance
+
+### Update Dependencies
 
 ```bash
-# Alle Logs
-docker compose logs
-
-# Nur letzte 50 Zeilen
-docker compose logs --tail=50
-
-# Follow-Mode
-docker compose logs -f
+pnpm update
+pnpm install
+git add package.json pnpm-lock.yaml
+git commit -m "chore: update dependencies"
 ```
 
-## Build-Prozess
+### Rebuild Container (Server)
 
-1. **pnpm build**
-   - TypeScript-Transpile (Frontend + Shared)
-   - Vite Build → `dist/`
-   - Server-Build über `tsc -p tsconfig.server.json` → `dist-server/`
-   - Optional: `BUILD_ID=<commit>` (Commit-Hash) wird an den Server/Client weitergegeben
+```bash
+docker compose build --no-cache
+docker compose up -d
+```
 
-2. **Docker Image**
-   - Basis: `node:20-alpine`
-   - Kopiert `dist/`, `dist-server/`, `package.json`, `pnpm-lock.yaml`
-   - `pnpm install --prod`
-   - Startet Fastify-Server (`node dist-server/server/server.js`)
+## Build Process
 
-## Konfiguration
+1. **Frontend Build** (Vite)
+   - TypeScript → JavaScript
+   - SASS → CSS
+   - Asset optimization (images, fonts)
+   - Pre-compression (gzip, brotli)
+   - Output: `dist/`
 
-### Docker Compose
+2. **Server Build** (tsc)
+   - TypeScript → JavaScript
+   - Output: `dist-server/`
 
-Die `compose.yml` konfiguriert:
+3. **Docker Image**
+   - Base: `node:20-alpine`
+   - Install production dependencies
+   - Copy build artifacts
+   - Start Fastify server
 
-- Node-Container mit Fastify
-- Traefik-Integration (Labels)
-- Netzwerk: `traefik-network` (extern)
+## Configuration
 
-## Build-ID / Version
+### Environment Variables
 
-- Während des Builds kann die Umgebungsvariable `BUILD_ID` gesetzt werden (Commit-Hash).
-- Die GitHub Action setzt automatisch `${{ github.sha }}`.
-- `deploy.sh` setzt `BUILD_ID=$(git rev-parse --short HEAD)` vor dem Build.
-- Die ID ist als Meta-Tag (`<meta name="build-id">`), als Tooltip im Footer (`ⓘ`) und per `console.info` ersichtlich.
+- `NODE_ENV`: `production` or undefined (dev)
+- `BUILD_ID`: Git commit hash (set automatically during deployment)
+- `PORT`: Server port (default: 3000)
+- `HOST`: Server host (default: 0.0.0.0)
 
-### Vite
+### Build ID
 
-Die Vite-Konfiguration (`vite.config.ts`):
-
-- Root: `./src`
-- Public Dir: `../public`
-- Build Output: `../dist`
-- Hash-basierte Dateinamen für Cache-Busting (`assets/index-[hash].js`, `assets/index-[hash].css`)
-- HTML wird nach Build angepasst (Plugin extrahiert gehashte Pfade)
+The build ID (commit hash) is:
+- Displayed in footer (clickable, links to GitHub commit)
+- Available as meta tag (`<meta name="build-id">`)
+- Set automatically during deployment
 
 ## Troubleshooting
 
-### Build schlägt fehl
+### Build Fails
 
 ```bash
-# Detaillierte Logs
+# Detailed logs
 docker compose build --no-cache
 
-# Container-Logs
+# Check container logs
 docker compose logs web
 ```
 
-### Container startet nicht
+### Container Won't Start
 
 ```bash
-# Prüfe Container-Status
+# Check status
 docker compose ps -a
 
-# Prüfe Logs
+# Check logs
 docker compose logs
 
-# Prüfe ob Netzwerk existiert
+# Verify network exists
 docker network ls | grep traefik-network
 ```
 
-### Netzwerk fehlt
+### Create Traefik Network
 
 ```bash
-# Traefik-Netzwerk erstellen (falls nicht vorhanden)
 docker network create traefik-network
 ```
 
-### Port-Konflikte
+## Important Files
 
-Die Nginx-Konfiguration verwendet Port 80. Falls dieser belegt ist, kann die `compose.yml` angepasst werden (Port-Mapping).
+- **`Dockerfile`**: Multi-stage build configuration
+- **`compose.yml`**: Production Docker Compose
+- **`compose.pre.yml`**: Staging Docker Compose
+- **`vite.config.ts`**: Build configuration
+- **`scripts/deploy.sh`**: Deployment script
+- **`server/server.ts`**: Fastify server
+- **`src/index.eta`**: HTML template
 
-## NPM Scripts
+## Notes
 
-| Script              | Beschreibung                                   |
-| ------------------- | ---------------------------------------------- |
-| `pnpm dev`          | Startet Development Server                     |
-| `pnpm build`        | Erstellt Production Build                      |
-| `pnpm preview`      | Preview des Production Builds                  |
-| `pnpm lint`         | Führt ESLint, Stylelint und HTMLHint aus       |
-| `pnpm format`       | Formatiert alle Dateien mit Prettier           |
-| `pnpm format:check` | Prüft Formatierung ohne Änderungen vorzunehmen |
-
-### Linting & Formatting
-
-- **ESLint** (TypeScript) + `typescript-eslint` + `eslint-plugin-prettier`
-- **Stylelint** (SCSS/CSS) inklusive Prettier-kompatibler Regeln
-- **HTMLHint** für HTML-Templates
-- Einheitliche Formatierung via **Prettier** (`.prettierrc.json`)
-
-```bash
-# Alles prüfen
-pnpm lint
-
-# Formatierung automatisch anwenden
-pnpm format
-```
-
-## Wichtige Dateien
-
-- **`Dockerfile`**: Multi-Stage Build-Konfiguration
-- **`compose.yml`**: Docker Compose Setup mit Traefik
-- **`vite.config.ts`**: Build-Konfiguration (Vite)
-- **`package.json`**: Dependencies und Scripts
-- **`.dockerignore`**: Dateien die nicht in Docker-Context gehören
-- **`.gitignore`**: Dateien die nicht versioniert werden
-
-## Deployment-Workflow
-
-1. **Lokal entwickeln** → `pnpm dev`
-2. **Änderungen testen** → `pnpm build && pnpm preview`
-3. **Auf Server deployen** → `rsync` + `docker compose up -d --build`
-4. **Logs prüfen** → `docker compose logs -f`
-
-## Hinweise
-
-- `dist/` wird beim Build erstellt und sollte nicht versioniert werden
-- `node_modules/` wird im Docker-Container installiert
-- Das `traefik-network` muss auf dem Server existieren
-- Bei Änderungen an Dependencies: `pnpm-lock.yaml` mit committen
-- **Cache-Busting**: Hash-basierte Dateinamen sorgen automatisch für Cache-Invalidierung bei Code-Änderungen
-- **Modulare Struktur**: TypeScript-Module in `src/lib/`, SASS-Module in `src/styles/`
+- `dist/` and `dist-server/` are build artifacts (not in git)
+- `node_modules/` installed in Docker container
+- Pre-compressed files (`.gz`, `.br`) served automatically
+- Hash-based asset names for cache busting
+- Modular code structure (TypeScript modules in `lib/`, SASS modules in `styles/`)
