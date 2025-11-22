@@ -5,6 +5,7 @@ import httpProxy from 'http-proxy';
 import path from 'node:path';
 import fs from 'node:fs/promises';
 import fsSync from 'node:fs';
+import zlib from 'node:zlib';
 import type { Lang, ModalKey } from '../src/lib/types.js';
 import {
   DEFAULT_LANG,
@@ -30,7 +31,7 @@ function determineLang(
 ): { lang: Lang; basePath: string; needsRedirect: boolean; search: string } {
   const { lang: pathLang, basePath } = splitLocalizedPath(pathname);
   const queryLang = searchParams.get('lang');
-  const explicitLang = queryLang === 'de' || queryLang === 'en' ? queryLang : null;
+  const explicitLang = (queryLang === 'de' || queryLang === 'en') ? queryLang : null;
   const finalLang = pathLang ?? explicitLang ?? DEFAULT_LANG;
   const sanitizedSearch = new URLSearchParams(searchParams);
   if (sanitizedSearch.has('lang')) {
@@ -187,25 +188,43 @@ async function start(): Promise<void> {
 
     const dialog = basePath === '/' ? null : getKeyByPath(basePath);
 
-    // If basePath is not root and no valid dialog was found, return 404
+    let html: string;
     if (basePath !== '/' && dialog === null) {
       reply.code(404);
-      const html = await render404Page(lang);
-      return reply
-        .type('text/html; charset=utf-8')
-        .header(
-          'Cache-Control',
-          isDev ? 'no-store' : 'public, max-age=300, s-maxage=300, stale-while-revalidate=60',
-        )
-        .send(html);
+      html = await render404Page(lang);
+      reply.header(
+        'Cache-Control',
+        isDev ? 'no-store' : 'public, max-age=300, s-maxage=300, stale-while-revalidate=60',
+      );
+    } else {
+      html = await renderPage({ lang, dialog, basePath });
+      reply.header(
+        'Cache-Control',
+        isDev ? 'no-store' : 'public, max-age=60, stale-while-revalidate=30',
+      );
     }
 
-    const html = await renderPage({ lang, dialog, basePath });
+    reply.type('text/html; charset=utf-8');
 
-    reply
-      .type('text/html; charset=utf-8')
-      .header('Cache-Control', isDev ? 'no-store' : 'public, max-age=60, stale-while-revalidate=30')
-      .send(html);
+    // Native compression
+    if (!isDev) {
+      const acceptEncoding = request.headers['accept-encoding'] as string | undefined;
+      if (acceptEncoding?.includes('br')) {
+        reply.header('Content-Encoding', 'br');
+        // Quality 4 is a good balance for dynamic content (11 is too slow)
+        const compressed = zlib.brotliCompressSync(html, {
+          params: { [zlib.constants.BROTLI_PARAM_QUALITY]: 4 },
+        });
+        return reply.send(compressed);
+      } else if (acceptEncoding?.includes('gzip')) {
+        reply.header('Content-Encoding', 'gzip');
+        // Level 6 is standard (9 is too slow)
+        const compressed = zlib.gzipSync(html, { level: 6 });
+        return reply.send(compressed);
+      }
+    }
+
+    return reply.send(html);
   });
 
   try {

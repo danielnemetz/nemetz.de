@@ -1,0 +1,52 @@
+services:
+  web-pre:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BUILD_ID: ${BUILD_ID:-local-dev}
+    container_name: nemetz-de-web-pre
+    restart: unless-stopped
+    networks:
+      - traefik-network
+    labels:
+      - 'traefik.enable=true'
+
+      # HTTPS Router - valid routes and static assets (higher priority)
+      - 'traefik.http.routers.nemetz-de-pre.rule=Host(`pre.nemetz.de`) && (Path(`/`) || PathPrefix(`/de`) || PathPrefix(`/en`) || PathPrefix(`/assets`) || PathPrefix(`/images`) || PathPrefix(`/fonts`) || PathPrefix(`/favicons`) || PathPrefix(`/i18n`) || Path(`/index.html`) || Path(`/404.html`) || Path(`/sitemap.xml`))'
+      - 'traefik.http.routers.nemetz-de-pre.entrypoints=websecure'
+      - 'traefik.http.routers.nemetz-de-pre.tls.certresolver=cloudflare'
+      - 'traefik.http.routers.nemetz-de-pre.middlewares=headers-nemetz-de-pre'
+      - 'traefik.http.routers.nemetz-de-pre.service=nemetz-de-pre'
+      - 'traefik.http.routers.nemetz-de-pre.priority=10'
+
+      # HTTPS Router - catch-all for invalid routes (lower priority)
+      - 'traefik.http.routers.nemetz-de-pre-404.rule=Host(`pre.nemetz.de`)'
+      - 'traefik.http.routers.nemetz-de-pre-404.entrypoints=websecure'
+      - 'traefik.http.routers.nemetz-de-pre-404.tls.certresolver=cloudflare'
+      - 'traefik.http.routers.nemetz-de-pre-404.middlewares=headers-nemetz-de-pre'
+      - 'traefik.http.routers.nemetz-de-pre-404.service=nemetz-de-pre'
+      - 'traefik.http.routers.nemetz-de-pre-404.priority=1'
+
+      # HTTP Router - valid routes and static assets (higher priority)
+      - 'traefik.http.routers.nemetz-de-web-pre.rule=Host(`pre.nemetz.de`) && (Path(`/`) || PathPrefix(`/de`) || PathPrefix(`/en`) || PathPrefix(`/assets`) || PathPrefix(`/images`) || PathPrefix(`/fonts`) || PathPrefix(`/favicons`) || PathPrefix(`/i18n`) || Path(`/index.html`) || Path(`/404.html`) || Path(`/sitemap.xml`))'
+      - 'traefik.http.routers.nemetz-de-web-pre.entrypoints=web'
+      - 'traefik.http.routers.nemetz-de-web-pre.service=nemetz-de-pre'
+      - 'traefik.http.routers.nemetz-de-web-pre.priority=10'
+
+      # HTTP Router - catch-all for invalid routes (lower priority)
+      - 'traefik.http.routers.nemetz-de-web-pre-404.rule=Host(`pre.nemetz.de`)'
+      - 'traefik.http.routers.nemetz-de-web-pre-404.entrypoints=web'
+      - 'traefik.http.routers.nemetz-de-web-pre-404.service=nemetz-de-pre'
+      - 'traefik.http.routers.nemetz-de-web-pre-404.priority=1'
+
+      # Middlewares
+      - 'traefik.http.middlewares.headers-nemetz-de-pre.headers.customrequestheaders.X-Forwarded-Proto=https'
+      - 'traefik.http.middlewares.headers-nemetz-de-pre.headers.customrequestheaders.X-Forwarded-Ssl=on'
+
+      # Services
+      - 'traefik.http.services.nemetz-de-pre.loadbalancer.server.port=3000'
+
+networks:
+  traefik-network:
+    external: true
