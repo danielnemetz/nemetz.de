@@ -7,7 +7,8 @@ declare global {
       dialog: ModalKey | null;
       path: string;
     };
+    __INITIAL_I18N__?: Record<string, unknown>;
   }
 }
 
-export {};
+export { };

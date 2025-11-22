@@ -5,7 +5,7 @@ import type { Lang, LocaleDict, ModalKey } from '../src/lib/types.js';
 import { MODALS } from '../src/lib/types.js';
 import { DEFAULT_LANG, buildLocalizedPath, getBasePathForKey } from '../src/lib/routing.js';
 import { getTranslationValue } from '../src/lib/i18n-utils.js';
-import { isDev, templateFile, localeDir, getBuildId } from './config.js';
+import { isDev, templateFile, localeDir, getBuildId, rootDir } from './config.js';
 import { loadManifest, getAssets, getManifest } from './manifest.js';
 
 // Single Eta instance – auto-escape HTML and cache templates in production
@@ -25,6 +25,8 @@ export type TemplateContext = {
     css: string | null;
   };
   isDev: boolean;
+  inlineCss?: string;
+  i18nJson?: string;
 };
 
 const templateCache: { value: string | null } = { value: null };
@@ -78,6 +80,20 @@ export async function renderPage({
   const translator = (key: string): string =>
     getTranslationValue(locale, key) ?? getTranslationValue(fallback, key) ?? '';
 
+  // Read CSS for inlining in production
+  let inlineCss: string | undefined;
+  if (!isDev) {
+    const assets = getAssets();
+    if (assets.css) {
+      try {
+        const cssPath = path.join(rootDir, 'dist', assets.css);
+        inlineCss = await fs.readFile(cssPath, 'utf8');
+      } catch (e) {
+        console.error('Failed to inline CSS:', e);
+      }
+    }
+  }
+
   const context: TemplateContext = {
     lang,
     initialDialog: dialog,
@@ -93,6 +109,8 @@ export async function renderPage({
     buildId: getBuildId(),
     assets: getAssets(),
     isDev,
+    inlineCss,
+    i18nJson: isDev ? undefined : JSON.stringify(locale),
   };
 
   const rendered = eta.renderString(template, context);
