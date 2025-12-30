@@ -3,7 +3,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import type { Lang, LocaleDict, ModalKey } from '../src/lib/types.js';
 import { MODALS } from '../src/lib/types.js';
-import { DEFAULT_LANG, buildLocalizedPath, getBasePathForKey } from '../src/lib/routing.js';
+import { DEFAULT_LANG, SUPPORTED_LANGS, buildLocalizedPath, getBasePathForKey } from '../src/lib/routing.js';
 import { getTranslationValue } from '../src/lib/i18n-utils.js';
 import { isDev, templateFile, localeDir, getBuildId, rootDir } from './config.js';
 import { loadManifest, getAssets, getManifest } from './manifest.js';
@@ -27,6 +27,8 @@ export type TemplateContext = {
   isDev: boolean;
   inlineCss?: string;
   i18nJson?: string;
+  canonicalUrl: string;
+  hreflangs: { lang: Lang | 'x-default'; url: string }[];
 };
 
 const templateCache: { value: string | null } = { value: null };
@@ -111,6 +113,17 @@ export async function renderPage({
     isDev,
     inlineCss,
     i18nJson: isDev ? undefined : JSON.stringify(locale),
+    canonicalUrl: `https://nemetz.de${buildLocalizedPath(lang, basePath)}`,
+    hreflangs: [
+      ...SUPPORTED_LANGS.map((l) => ({
+        lang: l,
+        url: `https://nemetz.de${buildLocalizedPath(l, basePath)}`,
+      })),
+      {
+        lang: 'x-default',
+        url: `https://nemetz.de${buildLocalizedPath(DEFAULT_LANG, basePath)}`,
+      },
+    ],
   };
 
   const rendered = eta.renderString(template, context);
@@ -145,6 +158,9 @@ export async function render404Page(lang: Lang): Promise<string> {
     assets: getAssets(),
     isDev,
     is404: true,
+    // For 404s, we don't strictly need canonical/hreflangs but we can provide defaults to satisfy the type
+    canonicalUrl: `https://nemetz.de${buildLocalizedPath(lang, '/')}`,
+    hreflangs: [],
   };
 
   return eta.renderString(template, context);

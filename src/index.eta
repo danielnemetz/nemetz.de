@@ -19,6 +19,12 @@
     <link rel="icon" href="/favicons/favicon.ico" sizes="any" />
     <link rel="preload" href="/fonts/roboto-condensed-300.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/roboto-condensed-700.woff2" as="font" type="font/woff2" crossorigin />
+    
+    <!-- SEO -->
+    <link rel="canonical" href="<%= it.canonicalUrl %>" />
+    <% it.hreflangs.forEach(function(link) { %>
+    <link rel="alternate" hreflang="<%= link.lang %>" href="<%= link.url %>" />
+    <% }) %>
     <% if (it.inlineCss) { %>
     <style><%~ it.inlineCss %></style>
     <% } else if (it.assets.css) { %>
@@ -28,10 +34,10 @@
 
   <body<% if (it.is404) { %> class="error-page"<% } %>>
     <div class="lang-selector" role="toolbar" aria-label="Language">
-      <a href="/de" class="lang-toggle" data-lang="de" aria-current="false" aria-label="Deutsch">
+      <a href="<%= it.langPathFor('de', it.initialDialog) %>" class="lang-toggle" data-lang="de" aria-current="<%= it.lang === 'de' %>" aria-label="Deutsch">
         <span class="lang-option">DE</span>
       </a>
-      <a href="/en" class="lang-toggle" data-lang="en" aria-current="true" aria-label="English">
+      <a href="<%= it.langPathFor('en', it.initialDialog) %>" class="lang-toggle" data-lang="en" aria-current="<%= it.lang === 'en' %>" aria-label="English">
         <span class="lang-option">EN</span>
       </a>
     </div>
@@ -42,13 +48,13 @@
       <a href="<%= it.langPathFor(it.lang, null) %>" class="btn" data-i18n="notFound.backHome"><%= it.t('notFound.backHome') %></a>
       <% } else { %>
       <a
-        href="/about"
+        href="<%= it.pathFor('about') %>"
         class="me"
         aria-label="About Daniel Nemetz"
         data-open-dialog="about"
         data-tooltip="About me"
       ></a>
-      <h1><a href="/about" data-open-dialog="about">Daniel Nemetz</a></h1>
+      <h1><a href="<%= it.pathFor('about') %>" data-open-dialog="about">Daniel Nemetz</a></h1>
       <p data-i18n="main.subtitle"><%= it.t('main.subtitle') %></p>
       <% } %>
     </main>
@@ -112,7 +118,7 @@
       <div class="empty"></div>
       <div class="footer-content">
         <div class="contact" role="toolbar" aria-label="Footer contact">
-          <a href="/about" data-open-dialog="about" aria-label="About Daniel Nemetz">Daniel Nemetz</a>
+          <a href="<%= it.pathFor('about') %>" data-open-dialog="about" aria-label="About Daniel Nemetz">Daniel Nemetz</a>
           <span class="separator">&middot;</span>
           <a href="mailto:daniel@nemetz.de">daniel@nemetz.de</a>
           <span class="separator">&middot;</span>
@@ -124,9 +130,9 @@
           <span class="separator">&middot;</span>
           <span class="copyright">© 2025</span>
           <span class="separator">&middot;</span>
-          <a href="/imprint" data-open-dialog="imprint" data-i18n="imprint.title"><%= it.t('imprint.title') %></a>
+          <a href="<%= it.pathFor('imprint') %>" data-open-dialog="imprint" data-i18n="imprint.title"><%= it.t('imprint.title') %></a>
           <span class="separator">&middot;</span>
-          <a href="/privacy" data-open-dialog="privacy" data-i18n="privacy.title"><%= it.t('privacy.title') %></a>
+          <a href="<%= it.pathFor('privacy') %>" data-open-dialog="privacy" data-i18n="privacy.title"><%= it.t('privacy.title') %></a>
         </div>
       </div>
       <div class="icons">

@@ -142,7 +142,11 @@ async function start(): Promise<void> {
       if (!fsSync.existsSync(fullPath)) {
         continue;
       }
-      fastify.get(`/${fileName}`, async (_req, reply) => {
+      fastify.get(`/${fileName}`, async (req, reply) => {
+        if (fileName === 'robots.txt' && req.headers.host === 'pre.nemetz.de') {
+          return reply.type('text/plain').send('User-agent: *\nDisallow: /');
+        }
+
         const data = await fs.readFile(fullPath);
         const ext = path.extname(fileName).slice(1);
         const type =
